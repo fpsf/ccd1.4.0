@@ -1,0 +1,12 @@
+'''def bytscl(array, max = None, min = None, nan = 0, top=255):
+    # see http://star.pst.qub.ac.uk/idl/BYTSCL.html
+    # note that IDL uses slightly different formulae for bytscaling floats and ints.
+    # here we apply only the FLOAT formula...
+
+    if max is None: max = numpy.nanmax(array)
+    if min is None: min = numpy.nanmin(array)
+
+    # return (top+0.9999)*(array-min)/(max-min)
+    return numpy.maximum(numpy.minimum(
+        ((top + 0.9999) * (array - min) / (max - min)).astype(numpy.int16)
+        , top), 0)'''
