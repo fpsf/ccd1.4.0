@@ -1,5 +1,5 @@
-CCD10 Manager é um software para o controle e automatização das observações feitas com a Sbig,
-através de uma interface intuitiva será disponibilizado campos para uma maior personalização e controle, 
+CCD10 Manager é um software para o controle e automatização das observações feitas com a câmera CCD Sbig,
+através de uma interface intuitiva. Serão disponibilizados campos para melhorar a personalização e o controle do programa, 
 como temperatura da câmera para inicio da observação, abertura do shooter, tempo de exposição e um painel para personalização
 do diretório onde as imagens serão salvas e seus respectivos nomes.
 
