@@ -15,7 +15,7 @@ do diretório onde as imagens serão salvas e seus respectivos nomes.
 <br>
 
 -----
-This project is maintained by [Plínio Pereira](https://github.com/pliniopereira) and [Hideki Inoue](https://github.com/hiyoku)
+This project is maintained by [Plínio Pereira](https://github.com/pliniopereira), [Hideki Inoue](https://github.com/hiyoku) and [Fernando Ferrari](https://github.com/fpsf)
 
 ## License
 
