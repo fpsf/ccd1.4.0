@@ -1,6 +1,8 @@
 from PyQt5 import QtCore
 
 from src.business.configuration.constants import project as p
+
+
 from src.ui.commons.verification import cb
 
 
@@ -51,6 +53,8 @@ class ConfigProject:
                self.get_value(m, p.PRESSURE), \
                self.get_value(m, p.TEMPERATURE)
 
+# cb(self.get_value(m, p.IGNORE_LUNAR_POSITION))
+# self._settings.value(p.IGNORE_LUNAR_POSITION, type=bool)
     def get_moonsun_settings(self):
         m = p.SUN_MOON_TITLE
         return self.get_value(m, p.MAX_SOLAR_ELEVATION), \

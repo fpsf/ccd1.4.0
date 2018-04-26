@@ -6,5 +6,7 @@
 def cb(string):
     if string == 'false':
         return False
+    elif string == False:
+        return False
     else:
         return True
