@@ -104,35 +104,15 @@ class Shooter(QtWidgets.QWidget):
 
             except Exception as e:
                 print("Exception os.path.splitext -> {}".format(e))
-
-            file_name = path
-
-
             image = img
-
-            get_level1 = 0.00
-
-            get_level2 = 0.99
-
-            # variavel = Image_Processing.get_level(image, get_level1, get_level2)
-            #
-            # im2 = Image_Processing.bytscl(image, variavel[1], variavel[0])
 
             sref_min = float(self.sref_calc.get_camera_settings()[6])
             sref_max = float(self.sref_calc.get_camera_settings()[7])
 
-            img_hist_equal=Image_Processing.img_hist_equal(image, sref_min, sref_max)
+            img_hist_equal = Image_Processing.img_hist_equal(image, sref_min, sref_max)
             im3 = toimage(img_hist_equal)
             im4 = im3.resize((int(512), int(512)))
             im5 = Image_Processing.draw_image(im4, str_name_image)
-            placeholder = None
-
-            # try:
-            #     im5 = Image_Processing.draw_image(im4, str_name_image)
-            #
-            #     # im5.show()
-            # except Exception as e:
-            #     print("Exception image_processing... -> {}".format(e))
 
             try:
                 qim = ImageQt(im5)
