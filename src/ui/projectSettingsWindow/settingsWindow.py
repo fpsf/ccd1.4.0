@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from PyQt5 import QtCore
+from PyQt5.QtWidgets import QGridLayout, QGroupBox
 
 from src.business.configuration.configProject import ConfigProject
 from src.business.consoleThreadOutput import ConsoleThreadOutput
@@ -73,7 +73,6 @@ class SettingsWindow(QtWidgets.QWidget):
             self.save_geo(st)
             self.save_sun(st)
             st.save_settings()
-            # self.startendephem = StartEndEphem(self)
         except Exception as e:
             print(e)
 
@@ -90,7 +89,39 @@ class SettingsWindow(QtWidgets.QWidget):
         set.set_moonsun_settings(info3[0], info3[1], info3[2], info3[3])
 
     def setting_up(self):
-        self.setLayout(set_lvbox(set_hbox(self.site),
+        '''self.setLayout(set_lvbox(set_hbox(self.site),
                                  set_hbox(self.geo),
                                  set_hbox(self.sun),
-                                 set_hbox(self.button_ok, self.button_clear, self.button_cancel, stretch2=1)))
+                                 set_hbox(self.button_ok, self.button_clear, self.button_cancel, stretch2=1)))'''
+        grid = QGridLayout()
+        grid.addWidget(self.setting_up_site())
+        grid.addWidget(self.setting_up_geo())
+        grid.addWidget(self.setting_up_sun())
+        grid.addWidget(self.setting_up_buttons())
+        self.setLayout(grid)
+
+    def setting_up_site(self):
+        group_box = QGroupBox("&Site Settings:")
+        group_box.setCheckable(True)
+        group_box.setChecked(True)
+        group_box.setLayout(self.site.setting_up())
+        return group_box
+
+    def setting_up_geo(self):
+        group_box = QGroupBox("&Geographic Settings:")
+        group_box.setCheckable(True)
+        group_box.setChecked(True)
+        group_box.setLayout(self.geo.setting_up())
+        return group_box
+
+    def setting_up_sun(self):
+        group_box = QGroupBox("&Sun and Moon Options:")
+        group_box.setCheckable(True)
+        group_box.setChecked(True)
+        group_box.setLayout(self.sun.setting_up())
+        return group_box
+
+    def setting_up_buttons(self):
+        group_box = QGroupBox()
+        group_box.setLayout(set_hbox(self.button_ok, self.button_clear, self.button_cancel))
+        return group_box

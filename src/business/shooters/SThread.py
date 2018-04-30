@@ -162,7 +162,6 @@ class SThread(QtCore.QThread):
             self.set_etime_pre_binning()
             self.lock.set_acquire()
             self.info = SbigDriver.photoshoot(self.etime, self.pre, self.b, 1,
-                                              self.get_level1, self.get_level2,
                                               self.get_axis_xi, self.get_axis_xf,
                                               self.get_axis_yi, self.get_axis_yf,
                                               self.get_ignore_crop,

@@ -27,7 +27,7 @@ def init_menu(self):
 def menu_operation_mode(self, menubar):
     pass
 
-# All actions needs return a QAction and a menuType, line '&File'
+# All actions need to return a QAction and a menuType, line '&File'
 
 
 def action_close(self):

@@ -8,6 +8,13 @@ class WidgetsSun(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(WidgetsSun, self).__init__(parent)
 
+        '''grid = QGridLayout()
+        grid.addWidget(self.create_site_info_group())
+        grid.addWidget(self.create_geo_info_group())
+        grid.addWidget(self.create_sun_info_group())
+        grid.addWidget(self.create_push_button_group())
+        self.setLayout(grid)'''
+
         # Creating Labels
         self.lmse = QtWidgets.QLabel("Max Solar Elevation (º):", self)
         self.lmse.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -17,7 +24,6 @@ class WidgetsSun(QtWidgets.QWidget):
 
         self.lmlp = QtWidgets.QLabel("Max Lunar Phase (%):", self)
         self.lmlp.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-
 
         # Creating Input Line
         self.emse = QtWidgets.QLineEdit(self)
@@ -33,15 +39,19 @@ class WidgetsSun(QtWidgets.QWidget):
         self.emlp = QtWidgets.QLineEdit(self)
         self.emlp.setMaximumWidth(100)
 
-        self.setting_up()
+        # self.setting_up()
 
     def setting_up(self):
+        '''group_box = QGroupBox("&Image Contrast:")
+        group_box.setCheckable(True)
+        group_box.setChecked(True)'''
         vbox = set_lvbox(set_hbox(self.lmse, self.emse),
                          set_hbox(self.ignore_lunar_position_label, self.eilp),
                          set_hbox(self.lmle, self.emle),
                          set_hbox(self.lmlp, self.emlp))
 
-        self.setLayout(vbox)
+        # self.setLayout(vbox)
+        return vbox
 
     def get_sun(self):
         return self.emse.text(), self.eilp.isChecked(), self.emle.text(), self.emlp.text()
@@ -57,3 +67,8 @@ class WidgetsSun(QtWidgets.QWidget):
         self.eilp.setChecked(False)
         self.emle.clear()
         self.emlp.clear()
+
+    def setting_up_sun(self):
+        '''group_box = QGroupBox("&Image Contrast:")
+        group_box.setCheckable(True)
+        group_box.setChecked(True)'''

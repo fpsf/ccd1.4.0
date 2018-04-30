@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
 
-from src.controller.camera import Camera
+from src.controller.Camera import Camera
 from src.controller.commons.Locker import Locker
 
 
@@ -16,12 +16,12 @@ class TempRegulation(QtWidgets.QWidget):
 
         self.setField = QtWidgets.QLineEdit(self)
 
-        #self.setLayout(set_hbox(self.setBtn, self.setField))
+        # self.setLayout(set_hbox(self.setBtn, self.setField))
 
     def btn_temperature(self):
         try:
             value = self.setField.text()
-            if value is '': pass
-            else: self.cam.set_temperature(float(value))
+            if value is not '':
+                self.cam.set_temperature(float(value))
         except Exception as e:
             print("Exception -> {}".format(e))

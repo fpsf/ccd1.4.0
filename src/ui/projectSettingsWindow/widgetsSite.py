@@ -8,6 +8,13 @@ class WidgetsSite(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(WidgetsSite, self).__init__(parent)
 
+        '''grid = QGridLayout()
+        grid.addWidget(self.create_site_info_group())
+        grid.addWidget(self.create_geo_info_group())
+        grid.addWidget(self.create_sun_info_group())
+        grid.addWidget(self.create_push_button_group())
+        self.setLayout(grid)'''
+
         # Creating Labels
         self.lPName = QtWidgets.QLabel("Project Name:", self)
         self.lPName.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -28,14 +35,14 @@ class WidgetsSite(QtWidgets.QWidget):
         self.eImager = QtWidgets.QLineEdit(self)
         self.eImager.setMaximumWidth(100)
 
-        self.setting_up()
+        # self.setting_up()
 
     def setting_up(self):
         vbox = set_lvbox(set_hbox(self.lPName, self.ePName),
                          set_hbox(self.lSite, self.eSite),
                          set_hbox(self.lImager, self.eImager))
-
-        self.setLayout(vbox)
+        # self.setLayout(vbox)
+        return vbox
 
     def get_site_info(self):
         return self.ePName.text(), self.eSite.text(), self.eImager.text()
@@ -52,3 +59,8 @@ class WidgetsSite(QtWidgets.QWidget):
 
     def get_name(self):
         return self.ePName.text()
+
+    def setting_up_site(self):
+        '''group_box = QGroupBox("&Image Contrast:")
+        group_box.setCheckable(True)
+        group_box.setChecked(True)'''

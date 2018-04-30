@@ -17,6 +17,8 @@ CROP_Y_AXIS_YF = "crop_yf"
 CHEBOX_IGNORE_CROP = "ignore_crop"
 CHEBOX_IMAGE_TIF = "image_tif"
 CHEBOX_IMAGE_FIT = "image_fit"
+CHEBOX_IMAGE_PNG = "image_png"
+WAVELENGTH_FILTER1 = "wavelength_filter"
 
 
 

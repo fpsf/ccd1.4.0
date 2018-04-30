@@ -17,7 +17,7 @@ class MainWindow(QtWidgets.QWidget):
         # Init the Layouts
         self.MainHBox = QtWidgets.QHBoxLayout()   # Main Box
         self.VBox = QtWidgets.QVBoxLayout()   # Vertical Box in the Left Box
-        self.all_h_boxes = []
+        # self.all_h_boxes = []
         self.console = ConsoleThreadOutput()
         self.console.set_widget_console(ConsoleLogWidget(self))
 
