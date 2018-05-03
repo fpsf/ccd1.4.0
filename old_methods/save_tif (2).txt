@@ -1,0 +1,22 @@
+'''def save_tif(img, newname):
+    print("Opening filename")
+    try:
+        print("tricat of save_tif")
+
+        try:
+            if sys.platform.startswith("linux"):
+                imgarray = numpy.array(img, dtype='uint16')
+                im3 = Image.fromarray(imgarray)
+                im3.save(newname)
+            elif sys.platform.startswith("win"):
+                imgarray_tiff2 = numpy.asarray(img, dtype=numpy.uint32)
+                im3 = Image.fromarray(imgarray_tiff2)
+                tiff = im3.resize((int(512), int(512)))
+                imgarray_tiff2 = numpy.asarray(tiff, dtype=numpy.uint32)
+                tiff2 = TIFFimage(imgarray_tiff2, description='TIFF Image')
+                tiff2.write_file(newname, compression='lzw')
+        except Exception as e:
+            print(e)
+
+    except Exception as e:
+        print("Exception -> {}".format(e))'''

@@ -182,7 +182,7 @@ class SettingsCCDInfos(QWidget):
     def take_one_photo(self):
         try:
             if str(self.close_open) == "Closed":
-                self.console.raise_text("AQUI dark photo", 1)
+                self.console.raise_text("take_one_photo started: dark photo", 1)
                 self.cam.one_photo = True
                 print("bbbbbbbbbbbbbbbbbbbbb")
                 print(self.cam.one_photo)
@@ -190,7 +190,7 @@ class SettingsCCDInfos(QWidget):
                 # self.one_photo.args_one_photo(self.select_filter_manual, self.select_filter_shutter)
                 # self.one_photo.start()
             else:
-                self.console.raise_text("AQUI photo", 1)
+                self.console.raise_text("take_one_photo started: photo", 1)
                 self.cam.one_photo = True
                 print("aaaaaaaaaaaaa")
                 print(self.cam.one_photo)

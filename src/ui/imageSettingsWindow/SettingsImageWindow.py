@@ -35,7 +35,7 @@ class SettingsImageWindow(QtWidgets.QWidget):
         self.getcropyf_l = None
 
         # Instance attributes create_type_image_group
-        self.image_png_l = None
+        # self.image_png_l = None
         self.image_tif_l = None
         self.image_fit_l = None
 
@@ -160,13 +160,12 @@ class SettingsImageWindow(QtWidgets.QWidget):
         group_box.setCheckable(True)
         group_box.setChecked(True)
 
-        self.image_png_l = QtWidgets.QCheckBox('Image .png', self)
+        # self.image_png_l = QtWidgets.QCheckBox('Image .png', self)
         self.image_tif_l = QtWidgets.QCheckBox('Image .tif', self)
         self.image_fit_l = QtWidgets.QCheckBox('Image .fit', self)
 
-        group_box.setLayout(set_lvbox(set_hbox(self.image_png_l),
-                                      set_hbox(self.image_tif_l),
-                                      set_hbox(self.image_fit_l)))
+        # set_hbox(self.image_png_l),
+        group_box.setLayout(set_lvbox(set_hbox(self.image_tif_l), set_hbox(self.image_fit_l)))
 
         return group_box
 
@@ -200,11 +199,11 @@ class SettingsImageWindow(QtWidgets.QWidget):
             #     self.console.raise_text("Wrong values for image crop.", 3)
             #
             # else:
+            # self.image_png_l.isChecked(),
             self.image_settings.set_image_settings(self.getlevel1l.text(), self.getlevel2l.text(),
                                                    self.getcropxi_l.text(), self.getcropxf_l.text(),
                                                    self.getcropyi_l.text(), self.getcropyf_l.text(),
                                                    self.ignore_crop_l.isChecked(),
-                                                   self.image_png_l.isChecked(),
                                                    self.image_tif_l.isChecked(),
                                                    self.image_fit_l.isChecked())
             self.image_settings.save_settings()
@@ -228,10 +227,11 @@ class SettingsImageWindow(QtWidgets.QWidget):
     def setting_values(self):
         info = self.get_image_settings()
         self.set_values(info[0], info[1], info[2], info[3], info[4],
-                        info[5], info[6], info[7], info[8], info[9])
+                        info[5], info[6], info[7], info[8])
 
+    # image_png,
     def set_values(self, get_level1, get_level2, crop_xi, crop_xf, crop_yi, crop_yf,
-                   ignore_crop, image_png, image_tif, image_fit):
+                   ignore_crop, image_tif, image_fit):
         self.getlevel1l.setText(get_level1)
         self.getlevel2l.setText(get_level2)
 
@@ -241,6 +241,6 @@ class SettingsImageWindow(QtWidgets.QWidget):
         self.getcropyf_l.setText(crop_yf)
 
         self.ignore_crop_l.setChecked(ignore_crop)
-        self.image_png_l.setChecked(image_png)
+        # self.image_png_l.setChecked(image_png)
         self.image_tif_l.setChecked(image_tif)
         self.image_fit_l.setChecked(image_fit)

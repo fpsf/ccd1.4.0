@@ -37,7 +37,6 @@ class StartEndEphem(QtWidgets.QFrame):
         self.title = None
 
     def init_thread_start_end_obs(self):
-        # self.consolethreadoutput.raise_text("F U I   C H A M A D O", 1)
         self.schedstartend.start_scheduler()
 
     def init_widgets(self):
@@ -45,12 +44,8 @@ class StartEndEphem(QtWidgets.QFrame):
         info_start_end = result()
 
         start_l = QtWidgets.QLabel("Start:", self)
-        #start_time = str(info_start_end[0])
-        #start_field = QtWidgets.QLabel(start_time[:-10] + " UTC")
 
         end_l = QtWidgets.QLabel("End:", self)
-        #end_time = str(info_start_end[1])
-        #end_field = QtWidgets.QLabel(end_time[:-10] + " UTC")
 
         time_obs_l = QtWidgets.QLabel("Total Obs. Time:", self)
         time_obs_time = str(info_start_end[2])

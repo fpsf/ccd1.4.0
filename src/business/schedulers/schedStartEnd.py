@@ -26,7 +26,6 @@ class SchedStartEnd(metaclass=Singleton):
     # Refreshing Start End Observation
     def refresh(self, value):
         the_date = datetime.datetime.utcnow()
-        # self.consolethreadoutput.raise_text("F U I   C H A M A D O", 1)
         if the_date.hour == 12 and the_date.minute == 0\
                 or self.c == 0 or \
                 self.settings_updated != su.UPDATER:
@@ -35,7 +34,6 @@ class SchedStartEnd(metaclass=Singleton):
             start_field = start_time[:-10] + " UTC"
             end_time = str(info_start_end[1])
             end_field = end_time[:-10] + " UTC"
-            # time_obs_temp = str(info_start_end[2])
             time_obs_time = str(info_start_end[2]).split(":")
             time_obs_time = [z.split(".")[0] for z in time_obs_time]
             time_obs_field = time_obs_time[0] + ":" + time_obs_time[1] + " Hours"

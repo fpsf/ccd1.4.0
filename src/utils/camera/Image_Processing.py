@@ -29,29 +29,103 @@ def set_header(fitname):
         print("Exception ->" + str(e))
 
 
-def save_tif(img, newname):
+def save_tif(img, newname, headers):
     print("Opening filename")
     img_tif = numpy.array(img, dtype=numpy.uint16)
+    newname_tif = newname
+    newname_tif += ".tif"
+    info_tiff = []
     try:
-        print("tricat of save_tif")
+        binning = int(headers['Binning'])
+        binning += 1
+    except Exception as e:
+        print("Binning Type Error ->" + str(e))
+        binning = " ??? "
+    try:
+        print("Tricat of save_tif")
+        day_hour = get_date_hour_image_for_headers(str(headers['Start Time']))
+
+        try:
+            info_tiff.append('Binning: '+ str(binning) + "x" + str(binning)+';')
+            info_tiff.append('CCD SET TEMP: '+ str(headers['Set Temperature'])+ ' Deg.'+';')
+            info_tiff.append('CCD Temperature: '+ str(headers['Temperature']) + ' Deg.'+';')
+            info_tiff.append('CCD Type: '+ str(headers['Imager ID'])+';')
+            info_tiff.append('Exposure: '+ str(headers['Exposure']) + '0 ms'+';')
+            info_tiff.append('Filter Label: '+ str(headers['Filter Label'])+';')
+            info_tiff.append('Filter Wavelength: '+ str(headers['Filter Wavelength'])+';')
+            info_tiff.append('Image Type: '+ 'TIF'+';')
+            info_tiff.append('Latitude: '+ str(headers['Latitude']) + ' Deg.'+';')
+            info_tiff.append('Longitude: '+ str(headers['Longitude']) + ' Deg.'+';')
+            info_tiff.append('Moon Elevation: '+ str(headers['Moon Elevation']) + ' Deg.'+';')
+            info_tiff.append('Moon Phase: '+ str(headers['Moon Phase']) + " %"+';')
+            info_tiff.append('Site ID: '+ str(headers['Observatory'])+';')
+            info_tiff.append('Start Time: '+ str(day_hour) + " UTC;")
+            info_tiff.append('Sun Elevation:'+ str(headers['Sun Elevation']) + ' Deg.;')
+            info_tiff.append('Version: '+ str(software_version)+'')
+        except Exception as e:
+            print("info.add_text: " + e)
 
         try:
             if sys.platform.startswith("linux"):
-                imgarray = numpy.array(img, dtype='uint16')
+                imgarray = numpy.array(img_tif, dtype='uint16')
                 im3 = Image.fromarray(imgarray)
-                im3.save(newname)
+                im3.save(newname_tif)
             elif sys.platform.startswith("win"):
-                imgarray_tiff2 = numpy.asarray(img, dtype=numpy.uint32)
+                # imgarray = numpy.array(img_tif, dtype=numpy.int16)
+                imgarray_tiff2 = numpy.asarray(img_tif, dtype=numpy.uint32)
+
                 im3 = Image.fromarray(imgarray_tiff2)
                 tiff = im3.resize((int(512), int(512)))
                 imgarray_tiff2 = numpy.asarray(tiff, dtype=numpy.uint32)
-                tiff2 = TIFFimage(imgarray_tiff2, description='TIFF Image')
-                tiff2.write_file(newname, compression='lzw')
+
+                tiff2 = TIFFimage(imgarray_tiff2, description=info_tiff)
+                tiff2.write_file(newname_tif, compression='lzw')
+                print(info_tiff)
         except Exception as e:
             print(e)
 
+
     except Exception as e:
         print("Exception -> {}".format(e))
+
+
+def save_fit(img_to_fit, newname, headers):
+    newname_fit = newname
+    newname_fit += ".fit"
+
+    try:
+        binning_fit = int(headers['Binning'])
+        binning_fit += 1
+    except Exception as e:
+        print("Binning Type Error ->" + str(e))
+        binning_fit = "???"
+
+    # Criando o arquivo final
+    try:
+        day_hour = get_date_hour_image_for_headers(str(headers['Start Time']))
+        # Abrindo o arquivo
+        fits.writeto(newname_fit, img_to_fit)
+        with fits.open(newname_fit, mode='update') as fits_file:
+            fits_file[0].header["BINNING"] = str(binning_fit) + "x" + str(binning_fit)
+            fits_file[0].header["CCD-TEMP"] = str(headers['Set Temperature']) + " Celsius degrees"
+            fits_file[0].header["CCDSTEMP"] = str(headers['Temperature']) + " Celsius degrees"
+            fits_file[0].header["CCDTYPE"] = str(headers['Imager ID'])
+            fits_file[0].header["EXPOSURE"] = str(headers['Exposure'] + "0 ms")
+            fits_file[0].header["FLT-LBL"] = str(headers['Filter Label'])
+            fits_file[0].header["FLT-WAVE"] = str(headers['Filter Wavelength'])
+            fits_file[0].header["IMG-TYPE"] = "FIT"
+            fits_file[0].header["LATITUDE"] = str(headers['Latitude']) + " degrees"
+            fits_file[0].header["LONGITUD"] = str(headers['Longitude']) + " degrees"
+            fits_file[0].header["MO-ELE"] = str(headers['Moon Elevation']) + " degrees"
+            fits_file[0].header["MO-PHASE"] = str(headers['Moon Phase']) + " %"
+            fits_file[0].header["SITE-ID"] = str(headers['Observatory'])
+            fits_file[0].header["START-T"] = str(day_hour) + " UTC"
+            fits_file[0].header["SUN-ELEV"] = str(headers['Sun Elevation']) + " degrees"
+            fits_file[0].header["VERS"] = str(software_version)
+
+    except Exception as e:
+        # print(newname_fit)
+        print("Exception save_fit ->" + str(e))
 
 
 def draw_image(img, file_name):

@@ -76,13 +76,6 @@ class Main(QtWidgets.QMainWindow):
         """
         menubar = self.menuBar()
 
-        a3 = self.action_connect_disconnect()
-        self.add_to_menu(menubar, a3[0], a3[1], a3[2])
-        a4 = self.action_continuous_shooter()
-        a5 = self.action_ephemeris_shooter()
-        m = self.add_to_menu(menubar, 'Operation Mode')
-        self.add_to_menu(m, 'Manual', a4[0], a4[1])
-        self.add_to_menu(m, 'Automatic', a5[0], a5[1])
         a2 = self.open_settings()
         self.add_to_menu(menubar, "System Settings", self.open_settings_system()[0])
         self.add_to_menu(menubar, "Project Settings", a2[0])

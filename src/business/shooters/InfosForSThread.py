@@ -1,6 +1,7 @@
+from src.business.configuration.configProject import ConfigProject
 from src.business.configuration.settingsCamera import SettingsCamera
 from src.business.configuration.settingsImage import SettingsImage
-
+from src.business.configuration.settingsFilters import SettingsFilters
 
 def get_project_settings():
     """
@@ -19,8 +20,6 @@ def get_project_settings():
     name_site_settings[1] = Observatory
     name_site_settings[2] = Imager ID
     """
-
-    from src.business.configuration.configProject import ConfigProject
     ci = ConfigProject()
 
     name_geographic_settings = ci.get_geographic_settings()
@@ -61,3 +60,9 @@ def get_camera_settings():
     info_cam = settings.get_camera_settings()
 
     return info_cam
+
+
+def get_filters_settings():
+    filters = SettingsFilters()
+    info_filters = filters.get_filters_settings()
+    return info_filters

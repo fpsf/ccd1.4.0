@@ -1,10 +1,12 @@
 from datetime import datetime
 
 import os
+
 import pyfits as fits
 
 from src.utils.camera import Image_Processing
 from src.utils.camera.Julian_Day import jd_to_date, date_to_jd
+from utils.camera.Image_Headers import set_headers
 
 
 def set_path():
@@ -100,7 +102,7 @@ def crop(dark_photo, pre, get_axis_xi, get_axis_xf,
     except Exception as e:
         print("Not possible cropping image ->" + str(e))
 
-    return path, tifname_final, fitname_final, fitname, tifname, site_id_name, tempo
+    return path, tifname_final, fitname_final, fitname, tifname, site_id_name, tempo, img
 
 
 def convert(img, image_tif, dark_photo, pre, tifname,
@@ -111,11 +113,13 @@ def convert(img, image_tif, dark_photo, pre, tifname,
 
     img_to_tif = img
     img_to_fit = img
+    for_headers_dic = {}
+    for_headers_dic = set_headers(for_headers_dic)
 
     try:
         if image_tif:
             print("Call set_tif")
-            Image_Processing.save_tif(img_to_tif, tifname)
+            Image_Processing.save_tif(img_to_tif, tifname, for_headers_dic)
             if dark_photo == 1:
                 fn = pre + "-DARK" + "_" + site_id_name + "_" + tempo
                 nameimage_final = fn + '.tif'
@@ -130,7 +134,8 @@ def convert(img, image_tif, dark_photo, pre, tifname,
         if image_fit:
             fits.writeto(fitname, img_to_fit)
             print("Call set_header")
-            Image_Processing.set_header(fitname)
+            # Image_Processing.set_header(fitname)
+            Image_Processing.save_fit(img_to_fit, fitname, for_headers_dic)
             if dark_photo == 1:
                 fn = pre + "-DARK" + "_" + site_id_name + "_" + tempo
                 nameimage_final = fn + '.fit'

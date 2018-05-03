@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIntValidator
 
 from src.business.consoleThreadOutput import ConsoleThreadOutput
-from src.business.settingsFilters import SettingsFilters
+from business.configuration.settingsFilters import SettingsFilters
 from src.ui.commons.layout import set_lvbox, set_hbox
 
 

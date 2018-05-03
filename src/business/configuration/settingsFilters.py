@@ -1,6 +1,5 @@
 from PyQt5 import QtCore
 
-from src.business.consoleThreadOutput import ConsoleThreadOutput
 from src.business.configuration.constants import camera as c
 
 
@@ -8,7 +7,6 @@ class SettingsFilters:
     def __init__(self):
         self._settings = QtCore.QSettings()
         self.setup_settings()
-        self.console = ConsoleThreadOutput()
 
     def setup_settings(self):
         self._settings = QtCore.QSettings(c.FILENAME, QtCore.QSettings.IniFormat)
@@ -26,11 +24,11 @@ class SettingsFilters:
         self._settings.setValue(c.BINNING, binning_filter1)
 
     def get_filters_settings(self):
-        #
         return self._settings.value(c.PREFIXO), \
                self._settings.value(c.WAVELENGTH_FILTER1), \
                self._settings.value(c.EXPOSICAO), \
                self._settings.value(c.BINNING), \
+
 
     def get_filepath(self):
         return self._settings.value(c.FILENAME)

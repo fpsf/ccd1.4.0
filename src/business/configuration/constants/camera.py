@@ -1,6 +1,9 @@
 # List of constants
 
+# File name:
 FILENAME = "camera"
+
+# Constants:
 TEMPERATURE = "temperature_camera"
 PREFIXO = "prefixo"
 EXPOSICAO = "tempo_exposicao"
@@ -17,7 +20,7 @@ CROP_Y_AXIS_YF = "crop_yf"
 CHEBOX_IGNORE_CROP = "ignore_crop"
 CHEBOX_IMAGE_TIF = "image_tif"
 CHEBOX_IMAGE_FIT = "image_fit"
-CHEBOX_IMAGE_PNG = "image_png"
+# CHEBOX_IMAGE_PNG = "image_png"
 WAVELENGTH_FILTER1 = "wavelength_filter"
 
 

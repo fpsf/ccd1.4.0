@@ -509,8 +509,8 @@ def photoshoot(etime, pre, binning, dark_photo,
 
     # path, tempo = "/home/hiyoku/Imagens/images/", time.strftime('%Y%m%d_%H%M%S')
     path, tifname_final, fitname_final, fitname, \
-    tifname, site_id_name, tempo = Image_Path.crop(dark_photo, pre, get_axis_xi, get_axis_xf, get_axis_yi, get_axis_yf,
-                                                   ignore_crop, img)
+    tifname, site_id_name, tempo, img = Image_Path.crop(dark_photo, pre, get_axis_xi, get_axis_xf, get_axis_yi,
+                                                        get_axis_yf, ignore_crop, img)
 
     data, hora, nameimage_final = Image_Path.convert(img, image_tif, dark_photo, pre, tifname, site_id_name, tempo,
                                                      image_fit, fitname)
