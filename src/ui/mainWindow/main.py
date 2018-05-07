@@ -233,11 +233,14 @@ class Main(QtWidgets.QMainWindow):
         '''
 
         self.stopAction = QAction(QIcon('icons/Stop.png'), 'Stop', self)
+        self.stopAction.triggered.connect(self.stopbutton)
+
+    def stopbutton(self):
         try:
-            if self.cam.start_taking_photo:
-                self.stopAction.triggered.connect(self.cam.stop_taking_photo)
-            elif self.cam.start_ephemeris_shooter:
-                self.stopAction.triggered.connect(self.cam.stop_ephemeris_shooter)
+            if self.cam.continuousShooterThread.isRunning():
+                self.cam.stop_taking_photo()
+            elif self.cam.ephemerisShooterThread.isRunning():
+                self.cam.stop_ephemeris_shooter()
             else:
                 print("Nothing to stop")
         except Exception as e:

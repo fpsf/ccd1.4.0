@@ -255,7 +255,6 @@ class Camera(metaclass=Singleton):
             self.ephemerisShooterThread.stop_shooter()
         else:
             self.console.raise_text("The camera is not connected!", 3)
-
     # All PyQt Slots
 
     def eshooter_started(self):
