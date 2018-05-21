@@ -262,7 +262,7 @@ class Camera(metaclass=Singleton):
         self.standby_mode()
 
     def eshooter_finished(self):
-        self.console.raise_text('Shooter finalized\n', 1)
+        self.console.raise_text('Shooter Finished\n', 1)
 
     def eshooter_observation_started(self):
         self.shooting = True

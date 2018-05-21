@@ -3,7 +3,7 @@ from datetime import datetime
 
 from PyQt5 import QtCore
 
-from src.utils.camera import SbigDriver
+from src.utils.camera import Julian_Day
 from src.utils.camera import Image_Path
 
 
@@ -52,7 +52,7 @@ class Logger(QtCore.QThread):
                 ano = tempo[0:4]
                 mes = tempo[4:6]
                 dia = tempo[6:8]
-                abs_julian_day = SbigDriver.jd_to_date(SbigDriver.date_to_jd(ano, mes, int(dia)) - 1)
+                abs_julian_day = Julian_Day.jd_to_date(Julian_Day.date_to_jd(ano, mes, int(dia)) - 1)
 
                 if 0 < abs_julian_day[2] < 10:
                     name_log = name_log_folder + "/LOG_" + name_observatory + "_" + str(abs_julian_day[0]) + "_" + mes\

@@ -1,7 +1,0 @@
-'''def retorna_imagem(img):
-    """
-    :param name_png:
-    :return:
-    """
-    img2 = Image.open(img)
-    img2.show()'''

@@ -1,9 +1,0 @@
-'''def resize_image_512x512(img):
-    """
-    :param img: 
-    :return: 
-    """
-    resized_img = img.resize((int(512), int(512)))
-    #resized_img = ImageOps.autocontrast(resized_img, 2)
-
-    return resized_img'''

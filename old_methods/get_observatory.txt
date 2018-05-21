@@ -1,6 +1,0 @@
-'''def get_observatory(name):
-    name_aux = str(name).split(',')[1]
-    name_aux = name_aux.replace("\'", "")
-    name_aux = name_aux.replace(" ", "")
-
-    return name_aux'''

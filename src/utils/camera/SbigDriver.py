@@ -409,7 +409,7 @@ def photoshoot(etime, pre, binning, dark_photo,
                     cout.readoutInfo[i_mode].width, cout.readoutInfo[i_mode].gain, cout.readoutInfo[i_mode].pixel_width,
                     cout.readoutInfo[i_mode].pixel_height]  # STORE FIRST MODE OF IMAGING CCD FOR EXPOSURE TEST
 
-    # Setting the Gain and Bining with Width and Height
+    # Setting the Gain and Binning with Width and Height
     # x = width
     # y = height
     v_read = 0
@@ -428,11 +428,21 @@ def photoshoot(etime, pre, binning, dark_photo,
     print("Height = " + str(v_h))
     print("Width = " + str(v_w))
 
+    '''
+    Microcontroller Serial Commands:
+    Open Shutter; CHARS 235, 144, 86, 1, 46; SENDS: "ëV."
+    Close Shutter; CHARS: 235, 144, 214, 1, 174 SENDS: "ëÖ®"
+    Get Temperature; CHARS: 235, 144, 2, 1, 130 SENDS: "ë‚"
+    In Python, Must be Written as: ser.write(bytes([nums, you, want, to, send]))
+    '''
+
     print("GRAB IMAGE - Start Exposure")
+
     cin = SbigStructures.StartExposureParams2
     cout = None
     udrv.SBIGUnivDrvCommand.argtypes = [c_ushort, POINTER(cin), POINTER(cout)]
 
+    # Might Become Deprecated in Order to Use Serial
     try:
         if dark_photo == 1:
             try:

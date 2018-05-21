@@ -6,7 +6,7 @@ import pyfits as fits
 
 from src.utils.camera import Image_Processing
 from src.utils.camera.Julian_Day import jd_to_date, date_to_jd
-from utils.camera.Image_Headers import set_headers
+from src.utils.camera.Image_Headers import set_headers
 
 
 def set_path():
