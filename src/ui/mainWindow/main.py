@@ -41,6 +41,19 @@ class Main(QtWidgets.QMainWindow):
         self.init_user_interface()
         self.createActions()
 
+        if self.info[0]:
+            self.connectAction.setEnabled(False)
+            self.disconnectAction.setEnabled(True)
+            self.automaticAction.setEnabled(False)
+            self.manualAction.setEnabled(False)
+            self.stopAction.setEnabled(True)
+        else:
+            self.connectAction.setEnabled(True)
+            self.disconnectAction.setEnabled(False)
+            self.automaticAction.setEnabled(False)
+            self.manualAction.setEnabled(False)
+            self.stopAction.setEnabled(False)
+
         self.createToolBars()
 
     def init_user_interface(self):
@@ -57,10 +70,10 @@ class Main(QtWidgets.QMainWindow):
 
         self.cs = ConfigSystem()
 
-        info = self.cs.get_site_settings()
+        self.info = self.cs.get_site_settings()
 
         # Connect Camera
-        if info[0] == True:
+        if self.info[0]:
             self.cam.connect()
             self.cam.start_ephemeris_shooter()
 
@@ -92,6 +105,8 @@ class Main(QtWidgets.QMainWindow):
         self.add_to_menu(menubar, "Image Settings", self.open_settings_image()[0])
         self.add_to_menu(menubar, "Filters Settings", self.open_settings_filters()[0])
         self.add_to_menu(menubar, "Imager Settings", self.open_settings_CCD()[0])
+        self.add_to_menu(menubar, "Open Shutter", self.cam.continuousShooterThread.shutter_control(True))
+        self.add_to_menu(menubar, "Close Shutter", self.cam.continuousShooterThread.shutter_control(False))
         # self.add_to_menu(menubar, a2[1], self.open_settings_system()[0], a2[0], self.open_settings_camera()[0])
 
         # add_to_menu(menubar, open_settings_system(self))
@@ -219,7 +234,7 @@ class Main(QtWidgets.QMainWindow):
 
     def createActions(self):
         self.connectAction = QAction(QIcon('icons/Connect.png'), 'Connect', self)
-        self.connectAction.triggered.connect(self.cam.connect)
+        self.connectAction.triggered.connect(self.connect_button)
         '''
         self.connectAction.setCheckable(True)
         self.connectAction.setChecked(True)
@@ -227,32 +242,76 @@ class Main(QtWidgets.QMainWindow):
         '''
 
         self.disconnectAction = QAction(QIcon('icons/Disconnect.png'), 'Disconnect', self)
-        self.disconnectAction.triggered.connect(self.cam.disconnect)
+        self.disconnectAction.triggered.connect(self.disconnect_button)
 
         self.automaticAction = QAction(QIcon('icons/Run_Automatic.png'), 'Run Automatic', self)
-        self.automaticAction.triggered.connect(self.cam.start_ephemeris_shooter)
+        self.automaticAction.triggered.connect(self.ephem_button)
         '''
         self.automaticAction.setCheckable(True)
         self.automaticAction.setChecked(True)
         '''
         self.manualAction = QAction(QIcon('icons/Run_Manual.png'), 'Run Manual', self)
-        self.manualAction.triggered.connect(self.cam.start_taking_photo)
+        self.manualAction.triggered.connect(self.manual_button)
         '''
         self.manualAction.setCheckable(True)
         self.manualAction.setChecked(False)
         '''
 
         self.stopAction = QAction(QIcon('icons/Stop.png'), 'Stop', self)
-        self.stopAction.triggered.connect(self.stopbutton)
+        self.stopAction.triggered.connect(self.stop_button)
 
-    def stopbutton(self):
+    def connect_button(self):
+        try:
+            self.cam.connect()
+            self.connectAction.setEnabled(False)
+            self.manualAction.setEnabled(True)
+            self.automaticAction.setEnabled(True)
+            self.stopAction.setEnabled(False)
+            self.disconnectAction.setEnabled(True)
+        except Exception as e:
+            print(e)
+
+    def disconnect_button(self):
+        try:
+            self.cam.disconnect()
+            self.disconnectAction.setEnabled(False)
+            self.manualAction.setEnabled(False)
+            self.automaticAction.setEnabled(False)
+            self.stopAction.setEnabled(False)
+            self.connectAction.setEnabled(True)
+        except Exception as e:
+            print(e)
+
+    def ephem_button(self):
+        try:
+            self.cam.start_ephemeris_shooter()
+            self.automaticAction.setEnabled(False)
+            self.manualAction.setEnabled(False)
+            self.stopAction.setEnabled(True)
+        except Exception as e:
+            print(e)
+
+    def manual_button(self):
+        try:
+            self.cam.start_taking_photo()
+            self.manualAction.setEnabled(False)
+            self.automaticAction.setEnabled(False)
+            self.stopAction.setEnabled(True)
+        except Exception as e:
+            print(e)
+
+    def stop_button(self):
         try:
             if self.cam.continuousShooterThread.isRunning():
                 self.cam.stop_taking_photo()
+                self.stopAction.setEnabled(False)
+                self.manualAction.setEnabled(True)
+                self.automaticAction.setEnabled(True)
             elif self.cam.ephemerisShooterThread.isRunning():
                 self.cam.stop_ephemeris_shooter()
-            else:
-                print("Nothing to stop")
+                self.stopAction.setEnabled(False)
+                self.manualAction.setEnabled(True)
+                self.automaticAction.setEnabled(True)
         except Exception as e:
             print(e)
 

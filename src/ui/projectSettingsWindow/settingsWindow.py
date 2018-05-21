@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QGridLayout, QGroupBox
 
 from src.business.configuration.configProject import ConfigProject
 from src.business.consoleThreadOutput import ConsoleThreadOutput
-from src.ui.commons.layout import set_hbox, set_lvbox
+from src.ui.commons.layout import set_hbox
 from src.ui.projectSettingsWindow.widgetsGeography import WidgetsGeography
 from src.ui.projectSettingsWindow.widgetsSite import WidgetsSite
 from src.ui.projectSettingsWindow.widgetsSun import WidgetsSun
@@ -103,21 +103,21 @@ class SettingsWindow(QtWidgets.QWidget):
     def setting_up_site(self):
         group_box = QGroupBox("&Site Settings:")
         group_box.setCheckable(True)
-        group_box.setChecked(True)
+        group_box.setChecked(False)
         group_box.setLayout(self.site.setting_up())
         return group_box
 
     def setting_up_geo(self):
         group_box = QGroupBox("&Geographic Settings:")
         group_box.setCheckable(True)
-        group_box.setChecked(True)
+        group_box.setChecked(False)
         group_box.setLayout(self.geo.setting_up())
         return group_box
 
     def setting_up_sun(self):
         group_box = QGroupBox("&Sun and Moon Options:")
         group_box.setCheckable(True)
-        group_box.setChecked(True)
+        group_box.setChecked(False)
         group_box.setLayout(self.sun.setting_up())
         return group_box
 

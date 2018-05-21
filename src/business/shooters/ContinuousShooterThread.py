@@ -88,16 +88,20 @@ class ContinuousShooterThread(QtCore.QThread):
             self.count += 1
 
     def shutter_control(self, cont):
-        ser = serial.Serial(serial_ports()[len(serial_ports()) - 1], 9600,
-                            bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE,
-                            stopbits=serial.STOPBITS_ONE)
-        if cont is True:
-            self.console.raise_text("Opening Shutter", 1)
-            send = bytes([235, 144, 86, 1, 46])
-            ser.write(send)
-            time.sleep(15)
-        else:
-            self.console.raise_text("Closing Shutter", 1)
-            send = bytes([235, 144, 214, 1, 174])
-            ser.write(send)
-            time.sleep(15)
+        try:
+            ser = serial.Serial(serial_ports()[len(serial_ports()) - 1], 9600,
+                                bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE,
+                                stopbits=serial.STOPBITS_ONE)
+            if cont is True:
+                self.console.raise_text("Opening Shutter", 1)
+                send = bytes([235, 144, 86, 1, 46])
+                ser.write(send)
+                # time.sleep(15)
+            else:
+                self.console.raise_text("Closing Shutter", 1)
+                send = bytes([235, 144, 214, 1, 174])
+                ser.write(send)
+                # time.sleep(15)
+        except Exception:
+            self.console.raise_text("No Serial Equipment!", 3)
+
