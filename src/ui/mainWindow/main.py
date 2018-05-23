@@ -9,6 +9,7 @@ from src.ui.filterWindow.main import Main as filters
 from src.ui.imageSettingsWindow.main import Main as imag_menu
 from src.ui.CCDWindow.main import Main as CCD_menu
 from src.ui.ephemerisShooterWindow.main import Main as eph
+from src.ui.allSettingsWindow.main import Main as all_settings
 from src.ui.mainWindow.mainWindow import MainWindow
 from src.ui.mainWindow.status import Status
 from src.ui.projectSettingsWindow.main import MainWindow as sw
@@ -41,7 +42,7 @@ class Main(QtWidgets.QMainWindow):
         self.init_user_interface()
         self.createActions()
 
-        if self.info[0]:
+        if self.cam.is_connected:
             self.connectAction.setEnabled(False)
             self.disconnectAction.setEnabled(True)
             self.automaticAction.setEnabled(False)
@@ -65,8 +66,10 @@ class Main(QtWidgets.QMainWindow):
         self.CCD_menu = CCD_menu(self)
         self.cam = Camera()
         self.filters_menu = filters(self)
+        self.all_settings = all_settings
         self.init_menu()
         self.init_window_geometry()
+
 
         self.cs = ConfigSystem()
 
@@ -204,6 +207,9 @@ class Main(QtWidgets.QMainWindow):
         self.CCD_menu.show()
         self.CCD_menu.show_camera_infos()
 
+    def open_all_settings(self):
+        self.all_settings.show()
+
     def action_connect_disconnect(self):
         setAC = QtWidgets.QAction('Connect', self)
         setAD = QtWidgets.QAction('Disconnect', self)
@@ -260,14 +266,18 @@ class Main(QtWidgets.QMainWindow):
         self.stopAction = QAction(QIcon('icons/Stop.png'), 'Stop', self)
         self.stopAction.triggered.connect(self.stop_button)
 
+        self.allSettingsAction = QAction(QIcon('icons/Settings.png'), 'Settings', self)
+        self.allSettingsAction.triggered.connect(self.open_all_settings)
+
     def connect_button(self):
         try:
             self.cam.connect()
-            self.connectAction.setEnabled(False)
-            self.manualAction.setEnabled(True)
-            self.automaticAction.setEnabled(True)
-            self.stopAction.setEnabled(False)
-            self.disconnectAction.setEnabled(True)
+            if self.cam.is_connected:
+                self.connectAction.setEnabled(False)
+                self.manualAction.setEnabled(True)
+                self.automaticAction.setEnabled(True)
+                self.stopAction.setEnabled(False)
+                self.disconnectAction.setEnabled(True)
         except Exception as e:
             print(e)
 
@@ -325,4 +335,6 @@ class Main(QtWidgets.QMainWindow):
         self.toolbar.addAction(self.manualAction)
         self.toolbar.addSeparator()
         self.toolbar.addAction(self.stopAction)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(self.allSettingsAction)
         self.toolbar.addSeparator()

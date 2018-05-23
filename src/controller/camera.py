@@ -129,6 +129,7 @@ class Camera(metaclass=Singleton):
                 self.console.raise_text("Established Link = {}".format(c), 2)
                 self.console.raise_text("Successfully connected!", 2)
                 self.set_firmware_and_model_values()
+                self.is_connected = True
 
                 '''
                 Fan Field sera atualizado automaticamente
@@ -137,9 +138,11 @@ class Camera(metaclass=Singleton):
                 # self.fan.refresh_fan_status()
                 return True
             else:
+                self.is_connected = False
                 self.console.raise_text("Connection error", 3)
 
         except Exception as e:
+            self.is_connected = False
             self.console.raise_text('Failed to connect the camera!\n{}'.format(e), 3)
 
         return False
@@ -155,6 +158,7 @@ class Camera(metaclass=Singleton):
                 self.console.raise_text("Close Driver = {}".format(cdr), 2)
                 self.console.raise_text("Successfully disconnected", 2)
                 self.clear_firmware_and_model_values()
+                self.is_connected = False
             else:
                 self.console.raise_text("Error disconnect! {} {}".format(cd, cdr), 3)
         except Exception as e:
