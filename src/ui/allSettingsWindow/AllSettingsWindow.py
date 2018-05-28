@@ -7,8 +7,8 @@ from src.ui.commons.layout import set_lvbox, set_hbox
 from src.ui.CCDWindow.main import Main as CCD_menu
 from src.ui.filterWindow.main import Main as filters
 from src.ui.imageSettingsWindow.main import Main as imag_menu
-from src.ui.projectSettingsWindow.main import MainWindow as sw
-from src.ui.systemSettingsWindow.main import MainWindow as mw
+from src.ui.projectSettingsWindow.main import MainWindow as mw
+from src.ui.systemSettingsWindow.main import MainWindow as sw
 
 
 class AllSettingsWindow(QtWidgets.QWidget):
@@ -29,7 +29,7 @@ class AllSettingsWindow(QtWidgets.QWidget):
 
     def make_buttons(self):
         self.swaction = QPushButton('System Settings', self)
-        self.mwaction.clicked.connect(self.a.show)
+        self.swaction.clicked.connect(self.a.show)
         # self.swaction.clicked.connect(self.open_settings_system)
 
         self.mwaction = QPushButton('Project Settings', self)
@@ -37,11 +37,11 @@ class AllSettingsWindow(QtWidgets.QWidget):
         # self.mwaction.clicked.connect(self.open_settings)
 
         self.imageAction = QPushButton('Image Settings', self)
-        self.imageAction.clicked.connect(self.CCD_menu.show)
+        self.imageAction.clicked.connect(self.imag.show)
         # self.imageAction.clicked.connect(self.open_settings_image)
 
         self.imagerAction = QPushButton('Imager Settings', self)
-        self.imagerAction.clicked.connect(self.imag.show)
+        self.imagerAction.clicked.connect(self.CCD_menu.show)
         # self.imagerAction.clicked.connect(self.open_settings_CCD)
 
         self.filterAction = QPushButton('Filter Settings', self)

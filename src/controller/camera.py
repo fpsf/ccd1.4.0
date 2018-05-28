@@ -60,6 +60,7 @@ class Camera(metaclass=Singleton):
         self.temp = 0
         self.temp_contador = 0
         self.temp_contador_manual = 0
+        self.is_connected = False
 
     def init_slots(self):
         """

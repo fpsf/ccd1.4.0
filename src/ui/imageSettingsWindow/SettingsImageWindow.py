@@ -9,6 +9,7 @@ from src.controller.camera import Camera
 from src.controller.commons.Locker import Locker
 from src.ui.commons.layout import set_lvbox, set_hbox
 from src.utils.camera.SbigDriver import (ccdinfo)
+from src.business.shooters.InfosForSThread import get_camera_settings
 
 
 class SettingsImageWindow(QtWidgets.QWidget):
@@ -23,6 +24,7 @@ class SettingsImageWindow(QtWidgets.QWidget):
         self.getlevel2l = None
 
         # Instance attributes create_crop_group
+
         self.ignore_crop_l = None
         self.crop_msg = None
         self.crop_xi = None
@@ -54,6 +56,8 @@ class SettingsImageWindow(QtWidgets.QWidget):
 
         self.lock = Locker()
 
+        self.y_pixels, self.x_pixels = self.get_pixels()
+
         grid = QGridLayout()
         grid.addWidget(self.create_image_contrast_group())
         grid.addWidget(self.create_crop_group())
@@ -72,16 +76,20 @@ class SettingsImageWindow(QtWidgets.QWidget):
 
     def get_pixels(self):
         info = self.get_info_pixels()
-
-        return int(info[-2]), int(info[-1])
+        if get_camera_settings()[3] == 2:
+            return int(info[-2])/3, int(info[-1])/3
+        elif get_camera_settings()[3] == 1:
+            return int(info[-2])/2, int(info[-1])/2
+        else:
+            return int(info[-2]), int(info[-1])
 
     def get_info_pixels(self):
         # Function to get the CCD Info
         # This function will return [Pixels]
-        ret = None
+        ret = 1024, 1024
         self.lock.set_acquire()
         try:
-            ret = tuple(ccdinfo())
+            ret = ccdinfo()[3], ccdinfo()[4]
         except Exception as e:
             self.console.raise_text("Failed to get camera information.\n{}".format(e))
         finally:
@@ -113,6 +121,7 @@ class SettingsImageWindow(QtWidgets.QWidget):
         return group_box
 
     def create_crop_group(self):
+
         group_box = QGroupBox("&Crop")
         group_box.setCheckable(True)
         group_box.setChecked(False)
@@ -125,28 +134,28 @@ class SettingsImageWindow(QtWidgets.QWidget):
 
         self.getcropxi_l = QtWidgets.QLineEdit(self)
         self.getcropxi_l.setMaximumWidth(50)
-        self.getcropxi_l.setValidator(QIntValidator(0, 1000))
+        self.getcropxi_l.setValidator(QIntValidator(0, int(self.x_pixels)))
 
         self.crop_xf = QtWidgets.QLabel("Wf:", self)
         self.crop_xf.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 
         self.getcropxf_l = QtWidgets.QLineEdit(self)
         self.getcropxf_l.setMaximumWidth(50)
-        self.getcropxf_l.setValidator(QIntValidator(0, 1000))
+        self.getcropxf_l.setValidator(QIntValidator(0, int(self.x_pixels)))
 
         self.crop_yi = QtWidgets.QLabel("Height: Hi:", self)
         self.crop_yi.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 
         self.getcropyi_l = QtWidgets.QLineEdit(self)
         self.getcropyi_l.setMaximumWidth(50)
-        self.getcropyi_l.setValidator(QIntValidator(0, 1000))
+        self.getcropyi_l.setValidator(QIntValidator(0, int(self.y_pixels)))
 
         self.crop_yf = QtWidgets.QLabel("Hf:", self)
         self.crop_yf.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 
         self.getcropyf_l = QtWidgets.QLineEdit(self)
         self.getcropyf_l.setMaximumWidth(50)
-        self.getcropyf_l.setValidator(QIntValidator(0, 1000))
+        self.getcropyf_l.setValidator(QIntValidator(0, int(self.y_pixels)))
 
         group_box.setLayout(set_lvbox(set_hbox(self.ignore_crop_l),
                                       set_hbox(self.crop_msg),
@@ -186,28 +195,26 @@ class SettingsImageWindow(QtWidgets.QWidget):
 
     def button_ok_func(self):
         try:
-            y_pixels, x_pixels = self.get_pixels()
+            # self.y_pixels, self.x_pixels = self.get_pixels()
             """
             ATENCAO
             """
             # Saving the Settings
-            # if int(self.getcropxi_l.text()) > int(self.getcropxf_l.text()) or \
-            #    int(self.getcropyi_l.text()) > int(self.getcropyf_l.text()) or \
-            #    int(self.getcropxf_l.text()) >= x_pixels or \
-            #    int(self.getcropyf_l.text()) >= y_pixels:
-            #
-            #     self.console.raise_text("Wrong values for image crop.", 3)
-            #
-            # else:
-            # self.image_png_l.isChecked(),
-            self.image_settings.set_image_settings(self.getlevel1l.text(), self.getlevel2l.text(),
-                                                   self.getcropxi_l.text(), self.getcropxf_l.text(),
-                                                   self.getcropyi_l.text(), self.getcropyf_l.text(),
-                                                   self.ignore_crop_l.isChecked(),
-                                                   self.image_tif_l.isChecked(),
-                                                   self.image_fit_l.isChecked())
-            self.image_settings.save_settings()
-            self.console.raise_text("Image settings successfully saved!", 1)
+            if int(self.getcropxi_l.text()) >= int(self.getcropxf_l.text()) or \
+            int(self.getcropyi_l.text()) >= int(self.getcropyf_l.text()) or \
+            int(self.getcropxf_l.text()) >= self.x_pixels or \
+            int(self.getcropyf_l.text()) >= self.y_pixels:
+                self.console.raise_text("Wrong values for image crop.", 3)
+            else:
+                # self.image_png_l.isChecked(),
+                self.image_settings.set_image_settings(self.getlevel1l.text(), self.getlevel2l.text(),
+                                                       self.getcropxi_l.text(), self.getcropxf_l.text(),
+                                                       self.getcropyi_l.text(), self.getcropyf_l.text(),
+                                                       self.ignore_crop_l.isChecked(),
+                                                       self.image_tif_l.isChecked(),
+                                                       self.image_fit_l.isChecked())
+                self.image_settings.save_settings()
+                self.console.raise_text("Image settings successfully saved!", 1)
 
         except Exception as e:
             print("Image settings were not saved -> {}".format(e))

@@ -66,7 +66,7 @@ class Main(QtWidgets.QMainWindow):
         self.CCD_menu = CCD_menu(self)
         self.cam = Camera()
         self.filters_menu = filters(self)
-        self.all_settings = all_settings
+        self.all_settings = all_settings(self)
         self.init_menu()
         self.init_window_geometry()
 
@@ -103,13 +103,18 @@ class Main(QtWidgets.QMainWindow):
         menubar = self.menuBar()
 
         a2 = self.open_settings()
-        self.add_to_menu(menubar, "System Settings", self.open_settings_system()[0])
-        self.add_to_menu(menubar, "Project Settings", a2[0])
-        self.add_to_menu(menubar, "Image Settings", self.open_settings_image()[0])
-        self.add_to_menu(menubar, "Filters Settings", self.open_settings_filters()[0])
-        self.add_to_menu(menubar, "Imager Settings", self.open_settings_CCD()[0])
-        self.add_to_menu(menubar, "Open Shutter", self.cam.continuousShooterThread.shutter_control(True))
-        self.add_to_menu(menubar, "Close Shutter", self.cam.continuousShooterThread.shutter_control(False))
+        self.add_to_menu(menubar, "Settings", self.open_settings_system()[0],
+                         a2[0],
+                         self.open_settings_image()[0],
+                         self.open_settings_filters()[0],
+                         self.open_settings_CCD()[0])
+        # self.add_to_menu(menubar, "System Settings", self.open_settings_system()[0])
+        # self.add_to_menu(menubar, "Project Settings", a2[0])
+        # self.add_to_menu(menubar, "Image Settings", self.open_settings_image()[0])
+        # self.add_to_menu(menubar, "Filters Settings", self.open_settings_filters()[0])
+        # self.add_to_menu(menubar, "Imager Settings", self.open_settings_CCD()[0])
+        # self.add_to_menu(menubar, "Open Shutter", self.cam.continuousShooterThread.shutter_control(True))
+        # self.add_to_menu(menubar, "Close Shutter", self.cam.continuousShooterThread.shutter_control(False))
         # self.add_to_menu(menubar, a2[1], self.open_settings_system()[0], a2[0], self.open_settings_camera()[0])
 
         # add_to_menu(menubar, open_settings_system(self))
@@ -173,7 +178,7 @@ class Main(QtWidgets.QMainWindow):
         setC = QtWidgets.QAction('Camera Settings', self)
         setC.setShortcut("Ctrl+C")
 
-        setC.triggered.connect(self.c.show)
+        setC.triggered.connect(self.imag.show)
 
         return setC, "&Options"
 
@@ -198,6 +203,7 @@ class Main(QtWidgets.QMainWindow):
 
     def open_settings_CCD(self):
         setCCD = QtWidgets.QAction('Imager Settings', self)
+        setCCD.setShortcut("Ctrl+Y")
 
         setCCD.triggered.connect(self.funcao_teste)
 
@@ -209,6 +215,12 @@ class Main(QtWidgets.QMainWindow):
 
     def open_all_settings(self):
         self.all_settings.show()
+
+    def open_shutter(self):
+        self.self.cam.continuousShooterThread.shutter_control(True)
+
+    def close_shutter(self):
+        self.self.cam.continuousShooterThread.shutter_control(False)
 
     def action_connect_disconnect(self):
         setAC = QtWidgets.QAction('Connect', self)
@@ -266,8 +278,14 @@ class Main(QtWidgets.QMainWindow):
         self.stopAction = QAction(QIcon('icons/Stop.png'), 'Stop', self)
         self.stopAction.triggered.connect(self.stop_button)
 
-        self.allSettingsAction = QAction(QIcon('icons/Settings.png'), 'Settings', self)
+        self.allSettingsAction = QAction('Settings', self)
         self.allSettingsAction.triggered.connect(self.open_all_settings)
+
+        self.openShutterAction = QAction('Open Shutter', self)
+        self.openShutterAction.triggered.connect(self.open_shutter)
+
+        self.closeShutterAction = QAction('Close Shutter', self)
+        self.closeShutterAction.triggered.connect(self.close_shutter)
 
     def connect_button(self):
         try:
@@ -337,4 +355,7 @@ class Main(QtWidgets.QMainWindow):
         self.toolbar.addAction(self.stopAction)
         self.toolbar.addSeparator()
         self.toolbar.addAction(self.allSettingsAction)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(self.openShutterAction)
+        self.toolbar.addAction(self.closeShutterAction)
         self.toolbar.addSeparator()
