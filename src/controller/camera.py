@@ -53,6 +53,7 @@ class Camera(metaclass=Singleton):
         self.init_slots()
 
         self.info_ini = []
+        self.pass_list = [1024, 1024]
 
         info_ini = self.get_camera_settings_ini()
         self.aux_temperature = int(info_ini[0])
@@ -99,7 +100,10 @@ class Camera(metaclass=Singleton):
         firmware, model, y_pixels, x_pixels = self.get_firmware_and_model_and_pixels()
         self.firmware_field.setText("Firmware: " + firmware)
         self.model_field.setText("Camera: " + model)
-        self.valor_pixels_x.setText(x_pixels + " X " + y_pixels + " Pixels")
+        self.valor_pixels_x.setText(x_pixels + "      X ")
+        self.valor_pixels_y.setText(y_pixels + " Pixels")
+        self.pass_list = [int(self.valor_pixels_x.text().split(" ")[0]),
+                          int(self.valor_pixels_y.text().split(" ")[0])]
 
     def clear_firmware_and_model_values(self):
         self.firmware_field.setText("Firmware: ")

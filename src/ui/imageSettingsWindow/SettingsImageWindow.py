@@ -56,7 +56,7 @@ class SettingsImageWindow(QtWidgets.QWidget):
 
         self.lock = Locker()
 
-        self.y_pixels, self.x_pixels = self.get_pixels()
+        self.x_pixels, self.y_pixels = self.get_pixels()
 
         grid = QGridLayout()
         grid.addWidget(self.create_image_contrast_group())
@@ -86,15 +86,16 @@ class SettingsImageWindow(QtWidgets.QWidget):
     def get_info_pixels(self):
         # Function to get the CCD Info
         # This function will return [Pixels]
-        ret = 1024, 1024
+        ret = 1000, 1000
         self.lock.set_acquire()
         try:
-            ret = ccdinfo()[3], ccdinfo()[4]
+            ret = self.camera.pass_list[0], self.camera.pass_list[1]
         except Exception as e:
             self.console.raise_text("Failed to get camera information.\n{}".format(e))
         finally:
             self.lock.set_release()
-
+        place = ret
+        placeholder = None
         return ret
 
     def create_image_contrast_group(self):
