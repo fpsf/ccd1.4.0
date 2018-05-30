@@ -203,8 +203,14 @@ class SettingsImageWindow(QtWidgets.QWidget):
             # Saving the Settings
             if int(self.getcropxi_l.text()) >= int(self.getcropxf_l.text()) or \
             int(self.getcropyi_l.text()) >= int(self.getcropyf_l.text()) or \
+            int(self.getcropxi_l.text()) >= self.x_pixels or \
+            int(self.getcropyi_l.text()) >= self.y_pixels or \
             int(self.getcropxf_l.text()) >= self.x_pixels or \
-            int(self.getcropyf_l.text()) >= self.y_pixels:
+            int(self.getcropyf_l.text()) >= self.y_pixels or \
+            int(self.getcropxi_l.text()) <= 0 or \
+            int(self.getcropyi_l.text()) <= 0 or \
+            int(self.getcropxf_l.text()) <= 0 or \
+            int(self.getcropyf_l.text()) <= 0:
                 self.console.raise_text("Wrong values for image crop.", 3)
             else:
                 # self.image_png_l.isChecked(),
