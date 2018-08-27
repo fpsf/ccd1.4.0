@@ -31,6 +31,8 @@ class SettingsCCDInfos(QWidget):
         self.temp_set_point_f = None
         self.temp_init_l = None
         self.temp_init_f = None
+        self.time_between_photos_l = None
+        self.time_between_photos_f = None
         self.one_photoButton = None
         self.tempButton = None
         self.fanButton = None
@@ -109,11 +111,17 @@ class SettingsCCDInfos(QWidget):
         self.temp_set_point_f.setMaximumWidth(100)
         self.temp_set_point_f.setValidator(QIntValidator(-100, 30))
 
-        self.temp_init_l = QtWidgets.QLabel("Tempo para iniciar(s):", self)
+        self.temp_init_l = QtWidgets.QLabel("CCD Cooling Time(s):", self)
         self.temp_init_l.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.temp_init_f = QtWidgets.QLineEdit(self)
         self.temp_init_f.setMaximumWidth(100)
         self.temp_init_f.setValidator(QIntValidator(0, 600))
+
+        self.time_between_photos_l = QtWidgets.QLabel("Time Between Images(s):", self)
+        self.time_between_photos_l.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.time_between_photos_f = QtWidgets.QLineEdit(self)
+        self.time_between_photos_f.setMaximumWidth(100)
+        # self.time_between_photos_f.setValidator(QIntValidator(0, 600))
 
         self.one_photoButton = QtWidgets.QPushButton('Take Photo', self)
         self.one_photoButton.clicked.connect(self.take_one_photo)
@@ -129,6 +137,7 @@ class SettingsCCDInfos(QWidget):
         group_box.setLayout(set_lvbox(set_hbox(self.shutter_l, self.close_open),
                                       set_hbox(self.temp_set_point_l, self.temp_set_point_f),
                                       set_hbox(self.temp_init_l, self.temp_init_f),
+                                      set_hbox(self.time_between_photos_l, self.time_between_photos_f),
                                       set_hbox(self.one_photoButton, self.tempButton, self.fanButton, stretch2=1)))
         return group_box
 
@@ -155,16 +164,18 @@ class SettingsCCDInfos(QWidget):
 
     def setting_values(self):
         info = self.get_values()
-        self.set_values(info[0], info[1])
+        self.set_values(info[0], info[5], info[4])
 
-    def set_values(self, temperature_camera, temp_init_f):
+    def set_values(self, temperature_camera, temp_init_f, tbf):
         self.temp_set_point_f.setText(temperature_camera)
         self.temp_init_f.setText(temp_init_f)
+        self.time_between_photos_f.setText(tbf)
 
     def button_ok_func(self):
         try:
             self.var_save_ini_camera.set_camera_settings(self.temp_set_point_f.text(),
-                                                         self.temp_init_f.text())
+                                                         self.temp_init_f.text(),
+                                                         self.time_between_photos_f.text())
 
             self.var_save_ini_camera.save_settings()
             self.console.raise_text("Camera settings successfully saved!", 1)

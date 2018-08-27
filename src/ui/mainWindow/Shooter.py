@@ -5,7 +5,7 @@ from PIL.ImageQt import ImageQt
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
-from pyfits import getdata
+from astropy.io.fits import getdata
 from scipy.misc import toimage
 
 from src.controller.camera import Camera
@@ -87,7 +87,6 @@ class Shooter(QtWidgets.QWidget):
         print("CCCCCCCCCCCCCCCCCCCCCCCCCCC")
         try:
             path = img.final_image_name
-            str_name_image = str(img.final_image_name)
 
             # image = Image.open(path)]
 
@@ -97,6 +96,7 @@ class Shooter(QtWidgets.QWidget):
                     img = getdata(path)
                 else:
                     print("222222222222222222222")
+                    # img = skimage.io.imread('/home/cristiano')
                     img = skimage.io.imread(path)
 
                 print("\n\n>>>>>>>>>>>>>>>>>>>>>>")
@@ -104,7 +104,7 @@ class Shooter(QtWidgets.QWidget):
 
             except Exception as e:
                 print("Exception os.path.splitext -> {}".format(e))
-            image = img
+            image = img  #im
 
             sref_min = float(self.sref_calc.get_camera_settings()[6])
             sref_max = float(self.sref_calc.get_camera_settings()[7])
@@ -112,7 +112,7 @@ class Shooter(QtWidgets.QWidget):
             img_hist_equal = Image_Processing.img_hist_equal(image, sref_min, sref_max)
             im3 = toimage(img_hist_equal)
             im4 = im3.resize((int(512), int(512)))
-            im5 = Image_Processing.draw_image(im4, str_name_image)
+            im5 = Image_Processing.draw_image(im4, path)
 
             try:
                 qim = ImageQt(im5)

@@ -3,7 +3,7 @@ import sys
 from datetime import datetime
 
 import numpy
-import pyfits as fits
+import astropy.io.fits as fits
 from PIL import Image, ImageDraw, ImageFont
 from skimage import exposure
 from libtiff import TIFFimage
@@ -33,7 +33,7 @@ def save_tif(img, newname, headers):
     print("Opening filename")
     img_tif = numpy.array(img, dtype=numpy.uint16)
     newname_tif = newname
-    newname_tif += ".tif"
+    # newname_tif += ".tif"
     info_tiff = []
     try:
         binning = int(headers['Binning'])
@@ -66,21 +66,17 @@ def save_tif(img, newname, headers):
             print("info.add_text: " + e)
 
         try:
-            if sys.platform.startswith("linux"):
-                imgarray = numpy.array(img_tif, dtype='uint16')
-                im3 = Image.fromarray(imgarray)
-                im3.save(newname_tif)
-            elif sys.platform.startswith("win"):
-                # imgarray = numpy.array(img_tif, dtype=numpy.int16)
-                imgarray_tiff2 = numpy.asarray(img_tif, dtype=numpy.uint32)
+            # imgarray = numpy.array(img_tif, dtype=numpy.int16)
+            imgarray_tiff2 = numpy.asarray(img_tif, dtype=numpy.uint16)
 
-                im3 = Image.fromarray(imgarray_tiff2)
-                tiff = im3.resize((int(512), int(512)))
-                imgarray_tiff2 = numpy.asarray(tiff, dtype=numpy.uint32)
+            ''' im3 = Image.fromarray(imgarray_tiff2)
+            tiff = im3.resize((int(512), int(512)))
+            imgarray_tiff2 = numpy.asarray(tiff, dtype=numpy.uint16)'''
 
-                tiff2 = TIFFimage(imgarray_tiff2, description=info_tiff)
-                tiff2.write_file(newname_tif, compression='lzw')
-                print(info_tiff)
+            tiff2 = TIFFimage(imgarray_tiff2, description=info_tiff)
+            tiff2.write_file(newname_tif, compression='lzw')
+            print(info_tiff)
+
         except Exception as e:
             print(e)
 
@@ -91,7 +87,7 @@ def save_tif(img, newname, headers):
 
 def save_fit(img_to_fit, newname, headers):
     newname_fit = newname
-    newname_fit += ".fit"
+    # newname_fit += ".fit"
 
     try:
         binning_fit = int(headers['Binning'])
@@ -138,8 +134,9 @@ def draw_image(img, file_name):
     filter_img, observatory_img = get_filter_observatory(file_name)
 
     if sys.platform.startswith("linux"):
-        fontsFolder = '/usr/share/fonts/truetype'
-        times_nr_Font = ImageFont.truetype(os.path.join(fontsFolder, 'Times_New_Roman_Bold.ttf'), 16)
+        fontsFolder = '/usr/share/fonts/opentype/noto'
+        # Times_New_Roman_Bold.ttf
+        times_nr_Font = ImageFont.truetype(os.path.join(fontsFolder, 'NotoSansCJK.ttc'), 16)
     elif sys.platform.startswith("win"):
         fontsFolder = 'C:\\Windows\\Fonts\\'
         times_nr_Font = ImageFont.truetype(os.path.join(fontsFolder, 'Arial.ttf'), 16)

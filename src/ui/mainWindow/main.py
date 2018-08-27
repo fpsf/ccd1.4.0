@@ -91,7 +91,7 @@ class Main(QtWidgets.QMainWindow):
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())'''
-        self.setWindowTitle("CCD Controller 1.0.0")
+        self.setWindowTitle("CCD Controller 1.2.0")
         self.show()
         # self.showMaximized()
     # Creating menubar
@@ -202,7 +202,7 @@ class Main(QtWidgets.QMainWindow):
         return setF, "&Options"
 
     def open_settings_CCD(self):
-        setCCD = QtWidgets.QAction('Imager Settings', self)
+        setCCD = QtWidgets.QAction('Camera Settings', self)
         setCCD.setShortcut("Ctrl+Y")
 
         setCCD.triggered.connect(self.funcao_teste)
@@ -278,7 +278,7 @@ class Main(QtWidgets.QMainWindow):
         self.stopAction = QAction(QIcon('icons/Stop.png'), 'Stop', self)
         self.stopAction.triggered.connect(self.stop_button)
 
-        self.allSettingsAction = QAction('Settings', self)
+        self.allSettingsAction = QAction(QIcon('icons/Settings.png'), 'Settings', self)
         self.allSettingsAction.triggered.connect(self.open_all_settings)
 
         self.openShutterAction = QAction('Open Shutter', self)
@@ -345,7 +345,7 @@ class Main(QtWidgets.QMainWindow):
 
     def createToolBars(self):
         self.toolbar = self.addToolBar('Close Toolbar')
-        self.toolbar.setIconSize(QtCore.QSize(70, 70))
+        self.toolbar.setIconSize(QtCore.QSize(55, 55))
         self.toolbar.addAction(self.connectAction)
         self.toolbar.addAction(self.disconnectAction)
         self.toolbar.addSeparator()
@@ -356,6 +356,10 @@ class Main(QtWidgets.QMainWindow):
         self.toolbar.addSeparator()
         self.toolbar.addAction(self.allSettingsAction)
         self.toolbar.addSeparator()
+        """
+        self.toolbar.addAction(self.allSettingsAction)
+        self.toolbar.addSeparator()
         self.toolbar.addAction(self.openShutterAction)
         self.toolbar.addAction(self.closeShutterAction)
         self.toolbar.addSeparator()
+        """

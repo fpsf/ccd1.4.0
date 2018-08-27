@@ -1,0 +1,4 @@
+[2018-07-11 @ 19:11:10 UTC] - Temperature set to 15°C
+[2018-07-11 @ 19:11:50 UTC] - Temperature set to -20°C
+[2018-07-11 @ 19:11:52 UTC] - State changed Fan!
+[2018-07-11 @ 19:12:02 UTC] - Camera settings successfully saved!

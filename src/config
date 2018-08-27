@@ -1,20 +1,20 @@
 [General]
 project_name=All-Sky
 
-[site_options]
-site_id=SJC
-imager_id=Sbig
-project_name=All-Sky
-
 [geographic_options]
+elevation=488
 latitude=-29.53
-longitude=-53.85
-elevation=350
-pressure=1000
+longitude=-53.5
+pressure=939
 temperature=10
 
+[site_options]
+imager_id=Sbig
+project_name=All-Sky
+site_id=SMS
+
 [sun_and_moon]
-max_solar_elevation=-12
 ignore_lunar_position=false
 max_lunar_elevation=20
-max_lunar_phase=10
+max_lunar_phase=5
+max_solar_elevation=-12

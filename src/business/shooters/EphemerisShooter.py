@@ -116,14 +116,15 @@ class EphemerisShooter(QtCore.QThread):
         self.controller = True
         self.shootOn = False
         c = 0
+        flag = 0
         try:
             while self.controller:
                 obs.date = ephem.date(datetime.datetime.utcnow())
-
                 sun = ephem.Sun(obs)
                 moon = ephem.Moon(obs)
 
-                frac = moon.moon_phase
+                # frac = moon.moon_phase
+                frac = float(moon.moon_phase) * 100.0
 
                 a = ephem.degrees(sun.alt)
                 b = ephem.degrees(str(moon.alt))
@@ -139,7 +140,97 @@ class EphemerisShooter(QtCore.QThread):
                 # print("self.max_lunar_elevation = " + str(self.max_lunar_elevation))
                 # print("self.max_lunar_phase = " + str(self.max_lunar_phase))
                 # print("\n\n")
+                '''
+                obs.date = ephem.date(now_datetime)
+                sun = ephem.Sun()
+                sun.compute(obs)
 
+                moon = ephem.Moon()
+                moon.compute(obs)
+                frac = float(moon.moon_phase) * 100.0
+
+                ag_s = float(repr(sun.alt))
+                s_ag = math.degrees(ag_s)
+                ag_m = float(repr(moon.alt))
+                m_ag = math.degrees(ag_m)
+                '''
+                # flag = 0
+                ephem_out = False
+
+                if self.ignore_lunar_position:
+                    if (float(math.degrees(a)) <= self.max_solar_elevation) and (flag == 0):
+
+                        if not self.shootOn:
+                            if not c:
+                                self.signal_started_shooting.emit()
+                                c = 1
+                                # flag = 1
+                            self.signal_temp.emit()
+                            time.sleep(5)
+                            if self.wait_temperature:
+                                # Iniciar as Observações
+                                self.start_taking_photo()
+                                self.shootOn = True
+                                flag = 1
+
+                    if (float(math.degrees(a)) > self.max_solar_elevation) and (flag == 1):
+
+                        if self.shootOn:
+                            # Finalizar as Observações
+                            self.stop_taking_photo()
+                            c = 0
+                            flag = 0
+                            self.t = False
+                            self.shootOn = False
+                else:
+                    if frac < self.max_lunar_phase:
+                        if (float(math.degrees(a)) <= self.max_solar_elevation) and (float(math.degrees(b)) <= self.max_lunar_elevation) and (flag == 0):
+                            if not self.shootOn:
+                                if not c:
+                                    self.signal_started_shooting.emit()
+                                    c = 1
+                                    # flag = 1
+                                self.signal_temp.emit()
+                                time.sleep(5)
+                                if self.wait_temperature:
+                                    # Iniciar as Observações
+                                    self.start_taking_photo()
+                                    self.shootOn = True
+                                    flag = 1
+                        if (float(math.degrees(a)) > self.max_solar_elevation or float(math.degrees(b)) > self.max_lunar_elevation) and (flag == 1):
+
+                            if self.shootOn:
+                                # Finalizar as Observações
+                                self.stop_taking_photo()
+                                c = 0
+                                flag = 0
+                                self.t = False
+                                self.shootOn = False
+                    else:
+                        if (float(math.degrees(a)) <= self.max_solar_elevation) and (float(math.degrees(b)) <= float(5.0)) and (flag == 0):
+                            if not self.shootOn:
+                                if not c:
+                                    self.signal_started_shooting.emit()
+                                    c = 1
+                                    # flag = 1
+                                self.signal_temp.emit()
+                                time.sleep(5)
+                                if self.wait_temperature:
+                                    # Iniciar as Observações
+                                    self.start_taking_photo()
+                                    self.shootOn = True
+                                    flag = 1
+
+                        if (float(math.degrees(a)) > self.max_solar_elevation or float(math.degrees(b)) > float(5.0)) and (flag == 1):
+                            if self.shootOn:
+                                # Finalizar as Observações
+                                self.stop_taking_photo()
+                                c = 0
+                                flag = 0
+                                self.t = False
+                                self.shootOn = False
+
+                '''
                 if float(math.degrees(a)) < self.max_solar_elevation or t == 1:
                     if (not self.ignore_lunar_position and float(math.degrees(b)) < self.max_lunar_elevation
                             and frac < self.max_lunar_phase) or self.ignore_lunar_position:
@@ -165,6 +256,7 @@ class EphemerisShooter(QtCore.QThread):
                         self.shootOn = False
 
                 time.sleep(5)
+                '''
         except Exception as e:
             self.console.raise_text("Exception no Ephemeris Shooter -> " + str(e))
 

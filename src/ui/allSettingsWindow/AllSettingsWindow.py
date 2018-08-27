@@ -40,7 +40,7 @@ class AllSettingsWindow(QtWidgets.QWidget):
         self.imageAction.clicked.connect(self.imag.show)
         # self.imageAction.clicked.connect(self.open_settings_image)
 
-        self.imagerAction = QPushButton('Imager Settings', self)
+        self.imagerAction = QPushButton('Camera Settings', self)
         self.imagerAction.clicked.connect(self.CCD_menu.show)
         # self.imagerAction.clicked.connect(self.open_settings_CCD)
 
@@ -49,9 +49,11 @@ class AllSettingsWindow(QtWidgets.QWidget):
         # self.filterAction.clicked.connect(self.open_settings_filters)
 
     def init_menu(self):
-        self.setLayout(set_lvbox(set_hbox(self.swaction, self.mwaction),
-                                 set_hbox(self.imageAction,
-                                          self.imagerAction, self.filterAction)))
+        self.setLayout(set_lvbox(set_hbox(self.swaction),
+                                 set_hbox(self.mwaction),
+                                 set_hbox(self.imageAction),
+                                 set_hbox(self.imagerAction),
+                                 set_hbox(self.filterAction)))
 
     """def open_settings(self):
         settings = QtWidgets.QAction('Project Settings', self)

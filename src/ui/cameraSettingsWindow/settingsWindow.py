@@ -233,16 +233,20 @@ class SettingsWindow(QtWidgets.QWidget):
                             int(self.getcropyf_l.text()) >= y_pixels/(int(self.combo.currentIndex() + 1)):
                 self.console.raise_text("Wrong values for image crop.", 3)
             else:
-                self.cam.set_camera_settings(self.setField_temperature.text(), self.prel.text(), self.expl.text(),
-                                             self.combo.currentIndex(), self.tempo_fotos.text(), self.time_colling.text(),
-                                             self.getlevel1l.text(), self.getlevel2l.text(), self.close_open.currentIndex(),
-                                             self.getcropxi_l.text(), self.getcropxf_l.text(),
-                                             self.getcropyi_l.text(), self.getcropyf_l.text(),
-                                             self.ignore_crop_l.isChecked(),
-                                             self.image_tif_l.isChecked(),
-                                             self.image_fit_l.isChecked())
+                self.cam.set_camera_settings(self.setField_temperature.text(), self.time_colling.text(),
+                                             self.tempo_fotos.text())
                 self.cam.save_settings()
                 self.console.raise_text("Camera settings successfully saved!", 1)
+                """
+                self.setField_temperature.text(), self.prel.text(), self.expl.text(),
+                self.combo.currentIndex(), self.tempo_fotos.text(), self.time_colling.text(),
+                self.getlevel1l.text(), self.getlevel2l.text(), self.close_open.currentIndex(),
+                self.getcropxi_l.text(), self.getcropxf_l.text(),
+                self.getcropyi_l.text(), self.getcropyf_l.text(),
+                self.ignore_crop_l.isChecked(),
+                self.image_tif_l.isChecked(),
+                self.image_fit_l.isChecked()
+                """
         except Exception as e:
             self.console.raise_text("Camera settings were not saved.", 3)
 

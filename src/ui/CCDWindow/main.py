@@ -27,7 +27,7 @@ class Main(QtWidgets.QMainWindow):
 
         self.setCentralWidget(self.ima)
 
-        self.setWindowTitle("Imager Settings")
+        self.setWindowTitle("Camera Settings")
 
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.WindowStaysOnTopHint)
 
