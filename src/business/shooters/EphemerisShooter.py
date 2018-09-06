@@ -10,6 +10,7 @@ from src.business.configuration.configProject import ConfigProject
 from src.business.configuration.settingsCamera import SettingsCamera
 from src.business.consoleThreadOutput import ConsoleThreadOutput
 from src.business.shooters.ContinuousShooterThread import ContinuousShooterThread
+from src.ui.mainWindow.StartEndTimeInfo import result
 
 
 class EphemerisShooter(QtCore.QThread):
@@ -171,6 +172,7 @@ class EphemerisShooter(QtCore.QThread):
                                 # Iniciar as Observações
                                 self.start_taking_photo()
                                 self.shootOn = True
+                                self.log_ephem_infos()
                                 flag = 1
 
                     if (float(math.degrees(a)) > self.max_solar_elevation) and (flag == 1):
@@ -196,7 +198,9 @@ class EphemerisShooter(QtCore.QThread):
                                     # Iniciar as Observações
                                     self.start_taking_photo()
                                     self.shootOn = True
+                                    self.log_ephem_infos()
                                     flag = 1
+
                         if (float(math.degrees(a)) > self.max_solar_elevation or float(math.degrees(b)) > self.max_lunar_elevation) and (flag == 1):
 
                             if self.shootOn:
@@ -219,6 +223,7 @@ class EphemerisShooter(QtCore.QThread):
                                     # Iniciar as Observações
                                     self.start_taking_photo()
                                     self.shootOn = True
+                                    self.log_ephem_infos()
                                     flag = 1
 
                         if (float(math.degrees(a)) > self.max_solar_elevation or float(math.degrees(b)) > float(5.0)) and (flag == 1):
@@ -262,7 +267,8 @@ class EphemerisShooter(QtCore.QThread):
 
     def stop_shooter(self):
         self.controller = False
-        self.continuousShooterThread.stop_continuous_shooter()
+        if self.continuousShooterThread.isRunning():
+            self.continuousShooterThread.stop_continuous_shooter()
 
     def start_taking_photo(self):
         self.continuousShooterThread.set_sleep_time(self.s)
@@ -271,3 +277,17 @@ class EphemerisShooter(QtCore.QThread):
 
     def stop_taking_photo(self):
         self.continuousShooterThread.stop_continuous_shooter()
+
+    def log_ephem_infos(self):
+        info_start_end = result()
+        start_time = str(info_start_end[0])
+        start_field = start_time[:-10] + " UTC"
+        end_time = str(info_start_end[1])
+        end_field = end_time[:-10] + " UTC"
+        '''
+        time_obs_time = str(info_start_end[2]).split(":")
+        time_obs_time = [z.split(".")[0] for z in time_obs_time]
+        time_obs_field = time_obs_time[0] + ":" + time_obs_time[1] + " Hours"
+        '''
+        # self.console.raise_text("Start Time: " + start_field + "; End Time: " + end_field, 2)
+        self.console.save_log("Start Time: " + start_field + "; End Time: " + end_field)

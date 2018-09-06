@@ -23,6 +23,7 @@ def result():
 
     obs.lat = info[0]
     obs.lon = info[1]
+    # Valor Padrão?
     obs.elevation = float(info[2])
     obs.date = ephem.date(now_datetime)
 

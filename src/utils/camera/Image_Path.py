@@ -45,14 +45,6 @@ def set_path():
     return path, tempo
 
 
-def get_observatory(name):
-    name_aux = str(name).split(',')[1]
-    name_aux = name_aux.replace("/", "")
-    name_aux = name_aux.replace(" ", "")
-
-    return name_aux
-
-
 def crop(dark_photo, pre, get_axis_xi, get_axis_xf,
          get_axis_yi, get_axis_yf, ignore_crop, img):
     path, tempo = set_path()

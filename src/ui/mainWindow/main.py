@@ -1,5 +1,9 @@
+import math
+import time
+
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox, QAction
 
@@ -18,6 +22,9 @@ from src.ui.testWindow.MainWindow2 import MainWindow2 as conts
 
 import sys
 
+from src.utils.camera import SbigDriver
+
+
 class Main(QtWidgets.QMainWindow):
     """
     classe de criacao da interface
@@ -32,28 +39,39 @@ class Main(QtWidgets.QMainWindow):
             self.screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         else:
             import subprocess
-            output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
+            output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4', shell=True, stdout=subprocess.PIPE).communicate()[0]
             self.screensize = output.split()[0].split(b'x')
             self.screensize[0] = str(self.screensize[0], "utf-8")
             self.screensize[1] = str(self.screensize[1], "utf-8")
             self.screensize[0] = int(self.screensize[0])
             self.screensize[1] = int(self.screensize[1])
+
+        # self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
         self.init_widgets()
         self.init_user_interface()
         self.createActions()
 
         if self.cam.is_connected:
+            if self.cam.ephemerisShooterThread.continuousShooterThread.isRunning():
+                self.actions_enabled(False, False, False, False, True, False)
+            else:
+                self.actions_enabled(False, False, False, False, True, True)
+            '''
             self.connectAction.setEnabled(False)
             self.disconnectAction.setEnabled(True)
             self.automaticAction.setEnabled(False)
             self.manualAction.setEnabled(False)
             self.stopAction.setEnabled(True)
+            '''
         else:
+            '''
             self.connectAction.setEnabled(True)
             self.disconnectAction.setEnabled(False)
             self.automaticAction.setEnabled(False)
             self.manualAction.setEnabled(False)
             self.stopAction.setEnabled(False)
+            '''
+            self.actions_enabled(True, False, False, False, False, True)
 
         self.createToolBars()
 
@@ -63,11 +81,14 @@ class Main(QtWidgets.QMainWindow):
         self.a = sw(self)
         self.b = mw(self)
         self.imag = imag_menu(self)
-        self.CCD_menu = CCD_menu(self)
         self.cam = Camera()
+        self.CCD_menu = CCD_menu(self)
+        # self.cam.ephemerisShooterThread.continuousShooterThread.started.connect(self.ephem_button)
+        self.cam.ephemerisShooterThread.signal_temp.connect(self.settings_false)
+        self.cam.ephemerisShooterThread.continuousShooterThread.finished.connect(self.stop_button)
         self.filters_menu = filters(self)
         self.all_settings = all_settings(self)
-        self.init_menu()
+        # self.init_menu()
         self.init_window_geometry()
 
 
@@ -79,6 +100,10 @@ class Main(QtWidgets.QMainWindow):
         if self.info[0]:
             self.cam.connect()
             self.cam.start_ephemeris_shooter()
+            # self.CCD_menu.show_camera_infos()
+
+    def settings_false(self):
+        self.allSettingsAction.setEnabled(False)
 
     def init_widgets(self):
         a = MainWindow(self)
@@ -92,10 +117,13 @@ class Main(QtWidgets.QMainWindow):
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())'''
         self.setWindowTitle("CCD Controller 1.2.0")
+        self.setFixedSize(self.width(), self.height())
         self.show()
+        # self.resize(0, 700)
         # self.showMaximized()
     # Creating menubar
 
+    '''
     def init_menu(self):
         """
         Creating the Menu Bar
@@ -118,6 +146,7 @@ class Main(QtWidgets.QMainWindow):
         # self.add_to_menu(menubar, a2[1], self.open_settings_system()[0], a2[0], self.open_settings_camera()[0])
 
         # add_to_menu(menubar, open_settings_system(self))
+    '''
 
     # All actions needs return a QAction and a menuType, line '&File'
     def action_close(self):
@@ -214,6 +243,7 @@ class Main(QtWidgets.QMainWindow):
         self.CCD_menu.show_camera_infos()
 
     def open_all_settings(self):
+        # self.all_settings.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
         self.all_settings.show()
 
     def open_shutter(self):
@@ -241,12 +271,20 @@ class Main(QtWidgets.QMainWindow):
 
     def closeEvent(self, event):
 
-        reply = QMessageBox.question(self, 'Message',
-                                         "Are you sure to quit?", QMessageBox.Yes |
-                                         QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.question(self, 'Message', "Are you sure to quit?",
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
+            if self.cam.ephemerisShooterThread.isRunning() or self.cam.continuousShooterThread.isRunning():
+                self.stop_button()
+            while self.cam.fan.fan_status() != "OFF":
+                time.sleep(1)
             event.accept()
+            '''
+            self.stop_button()
+            while not math.isclose(SbigDriver.get_temperature()[2], 15.00):
+                time.sleep(1)
+            '''
         else:
             event.ignore()
 
@@ -281,6 +319,9 @@ class Main(QtWidgets.QMainWindow):
         self.allSettingsAction = QAction(QIcon('icons/Settings.png'), 'Settings', self)
         self.allSettingsAction.triggered.connect(self.open_all_settings)
 
+        self.exitAction = QAction(QIcon('icons/Exit.png'), "Exit", self)
+        self.exitAction.triggered.connect(self.close)
+
         self.openShutterAction = QAction('Open Shutter', self)
         self.openShutterAction.triggered.connect(self.open_shutter)
 
@@ -291,40 +332,56 @@ class Main(QtWidgets.QMainWindow):
         try:
             self.cam.connect()
             if self.cam.is_connected:
+                self.actions_enabled(False, True, True, True, False, True)
+                '''
                 self.connectAction.setEnabled(False)
                 self.manualAction.setEnabled(True)
                 self.automaticAction.setEnabled(True)
                 self.stopAction.setEnabled(False)
                 self.disconnectAction.setEnabled(True)
+                '''
         except Exception as e:
             print(e)
 
     def disconnect_button(self):
         try:
             self.cam.disconnect()
+            self.actions_enabled(True, False, False, False, False, True)
+            '''
             self.disconnectAction.setEnabled(False)
             self.manualAction.setEnabled(False)
             self.automaticAction.setEnabled(False)
             self.stopAction.setEnabled(False)
             self.connectAction.setEnabled(True)
+            '''
         except Exception as e:
             print(e)
 
     def ephem_button(self):
         try:
             self.cam.start_ephemeris_shooter()
+            time.sleep(1)
+            if self.cam.ephemerisShooterThread.continuousShooterThread.isRunning():
+                self.actions_enabled(False, False, False, False, True, False)
+            else:
+                self.actions_enabled(False, False, False, False, True, True)
+            '''
             self.automaticAction.setEnabled(False)
             self.manualAction.setEnabled(False)
             self.stopAction.setEnabled(True)
+            '''
         except Exception as e:
             print(e)
 
     def manual_button(self):
         try:
             self.cam.start_taking_photo()
+            self.actions_enabled(False, False, False, False, True, False)
+            '''
             self.manualAction.setEnabled(False)
             self.automaticAction.setEnabled(False)
             self.stopAction.setEnabled(True)
+            '''
         except Exception as e:
             print(e)
 
@@ -332,16 +389,35 @@ class Main(QtWidgets.QMainWindow):
         try:
             if self.cam.continuousShooterThread.isRunning():
                 self.cam.stop_taking_photo()
+                # self.cam.standby_mode()
+                self.actions_enabled(False, True, True, True, False, True)
+                '''
                 self.stopAction.setEnabled(False)
                 self.manualAction.setEnabled(True)
                 self.automaticAction.setEnabled(True)
+                '''
             elif self.cam.ephemerisShooterThread.isRunning():
                 self.cam.stop_ephemeris_shooter()
+                # self.cam.standby_mode()
+                self.actions_enabled(False, True, True, True, False, True)
+                '''
                 self.stopAction.setEnabled(False)
                 self.manualAction.setEnabled(True)
                 self.automaticAction.setEnabled(True)
+                '''
+            else:
+                self.actions_enabled(False, True, True, True, False, True)
+
         except Exception as e:
             print(e)
+
+    def actions_enabled(self, bool1, bool2, bool3, bool4, bool5, bool6):
+        self.connectAction.setEnabled(bool1)
+        self.disconnectAction.setEnabled(bool2)
+        self.automaticAction.setEnabled(bool3)
+        self.manualAction.setEnabled(bool4)
+        self.stopAction.setEnabled(bool5)
+        self.allSettingsAction.setEnabled(bool6)
 
     def createToolBars(self):
         self.toolbar = self.addToolBar('Close Toolbar')
@@ -351,10 +427,11 @@ class Main(QtWidgets.QMainWindow):
         self.toolbar.addSeparator()
         self.toolbar.addAction(self.automaticAction)
         self.toolbar.addAction(self.manualAction)
-        self.toolbar.addSeparator()
+        # self.toolbar.addSeparator()
         self.toolbar.addAction(self.stopAction)
         self.toolbar.addSeparator()
         self.toolbar.addAction(self.allSettingsAction)
+        self.toolbar.addAction(self.exitAction)
         self.toolbar.addSeparator()
         """
         self.toolbar.addAction(self.allSettingsAction)

@@ -18,7 +18,8 @@ class ConfigsInfo(QtWidgets.QFrame):
         # Init Widget Site Info
         infoSite = self.confs.get_site_settings()
         infoGeo = self.confs.get_geographic_settings()
-        self.site = SiteInfo(infoSite[1], infoSite[2], infoGeo[0], infoGeo[1], infoGeo[2], infoGeo[3])
+        # infoGeo[2], infoGeo[3]
+        self.site = SiteInfo(infoSite[1], infoSite[2], infoGeo[0], infoGeo[1])
 
         infoMoon = self.confs.get_moonsun_settings()
         self.moon = EphemInfo(infoMoon[0], infoMoon[2], infoMoon[3])

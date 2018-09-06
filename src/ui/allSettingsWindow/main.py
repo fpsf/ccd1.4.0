@@ -23,6 +23,7 @@ class Main(QMainWindow):
             self.screensize[1] = int(self.screensize[1])
 
         self.all = AllSettingsWindow()
+        self.setFixedSize(self.all.swaction.width() + 5, self.all.swaction.height() * 5)
         self.setCentralWidget(self.all)
         self.setWindowTitle("Settings")
         self.init_window_geometry()

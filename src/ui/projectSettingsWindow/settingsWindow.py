@@ -1,3 +1,5 @@
+import time
+
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QGridLayout, QGroupBox
 
@@ -25,7 +27,10 @@ class SettingsWindow(QtWidgets.QWidget):
         self.button_settings()
 
         # Init Interface
-        self.setting_up()
+        # self.setting_up()
+        self.grid = self.setting_up()
+        self.w = self.grid.geometry().width()
+        self.h = self.grid.geometry().height()
         self.refresh_all_fields()
 
     def button_settings(self):
@@ -60,7 +65,8 @@ class SettingsWindow(QtWidgets.QWidget):
             infoSite = st.get_site_settings()
             self.site.set_site_info(infoSite[0], infoSite[1], infoSite[2])
             infoGeo = st.get_geographic_settings()
-            self.geo.set_geography(infoGeo[0], infoGeo[1], infoGeo[2], infoGeo[3], infoGeo[4])
+            # infoGeo[3], infoGeo[4]
+            self.geo.set_geography(infoGeo[0], infoGeo[1], infoGeo[4])
             infoSun = st.get_moonsun_settings()
             self.sun.set_sun(str(infoSun[0]), infoSun[1], str(infoSun[2]), str(infoSun[3]))
         except Exception as e:
@@ -82,7 +88,8 @@ class SettingsWindow(QtWidgets.QWidget):
 
     def save_geo(self, set):
         info2 = self.geo.get_geography()
-        set.set_geographic_settings(info2[0], info2[1], info2[2], info2[3], info2[4])
+        # info2[2], info2[3], info2[4]
+        set.set_geographic_settings(info2[0], info2[1], '0', '0', '0')
 
     def save_sun(self, set):
         info3 = self.sun.get_sun()
@@ -99,6 +106,7 @@ class SettingsWindow(QtWidgets.QWidget):
         grid.addWidget(self.setting_up_sun())
         grid.addWidget(self.setting_up_buttons())
         self.setLayout(grid)
+        return grid
 
     def setting_up_site(self):
         group_box = QGroupBox("&Site Settings:")

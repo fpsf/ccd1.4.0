@@ -2,11 +2,11 @@
 project_name=All-Sky
 
 [geographic_options]
-elevation=488
+elevation=0
 latitude=-29.53
 longitude=-53.5
-pressure=939
-temperature=10
+pressure=0
+temperature=0
 
 [site_options]
 imager_id=Sbig
@@ -16,5 +16,5 @@ site_id=SMS
 [sun_and_moon]
 ignore_lunar_position=false
 max_lunar_elevation=20
-max_lunar_phase=5
+max_lunar_phase=6
 max_solar_elevation=-12

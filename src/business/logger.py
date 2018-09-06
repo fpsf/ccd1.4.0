@@ -39,11 +39,10 @@ class Logger(QtCore.QThread):
 
             from src.business.configuration.configProject import ConfigProject
             ci = ConfigProject()
-            name_observatory = str(ci.get_site_settings())
-            name_observatory = Image_Path.get_observatory(name_observatory)
+            name_observatory = ci.get_site_settings()[1]
 
             if int(tempo[9:11]) > 12:
-                name_log = name_log_folder + "/LOG_" + name_observatory + "_" + data + '.txt'
+                name_log = name_log_folder + "/" + name_observatory + "_" + data + '.txt'
                 log = open(str(name_log), 'a')
                 log.write(str(data_log) + " - " + str(self.text) + "\n")
                 log.close()
@@ -54,15 +53,28 @@ class Logger(QtCore.QThread):
                 dia = tempo[6:8]
                 abs_julian_day = Julian_Day.jd_to_date(Julian_Day.date_to_jd(ano, mes, int(dia)) - 1)
 
-                if 0 < abs_julian_day[2] < 10:
-                    name_log = name_log_folder + "/LOG_" + name_observatory + "_" + str(abs_julian_day[0]) + "_" + mes\
-                               + "0" + str(abs_julian_day[2]) + '.txt'
+                if (0 < abs_julian_day[2] < 10) and (0 < abs_julian_day[1] < 10):
+                    name_log = name_log_folder + "/" + name_observatory + "_" + str(abs_julian_day[0]) + "_" +\
+                               "0" + str(abs_julian_day[1]) + "0" + str(abs_julian_day[2]) + '.txt'
+                    log = open(str(name_log), 'a')
+                    log.write(str(data_log) + " - " + str(self.text) + "\n")
+                    log.close()
+                elif (0 < abs_julian_day[2] < 10) and (not (0 < abs_julian_day[1] < 10)):
+                    name_log = name_log_folder + "/" + name_observatory + "_" + str(abs_julian_day[0]) + "_" + \
+                               str(abs_julian_day[1]) + "0" + str(abs_julian_day[2]) + '.txt'
+                    log = open(str(name_log), 'a')
+                    log.write(str(data_log) + " - " + str(self.text) + "\n")
+                    log.close()
+                elif (not (0 < abs_julian_day[2] < 10)) and (0 < abs_julian_day[1] < 10):
+                    name_log = name_log_folder + "/" + name_observatory + "_" + str(abs_julian_day[0]) + "_" + \
+                               "0" + str(abs_julian_day[1]) + str(abs_julian_day[2]) + '.txt'
                     log = open(str(name_log), 'a')
                     log.write(str(data_log) + " - " + str(self.text) + "\n")
                     log.close()
                 else:
-                    name_log = name_log_folder + "/LOG_" + name_observatory + "_" + mes + "_" + str(abs_julian_day[1]) + str(
-                        abs_julian_day[2]) + '.txt'
+                    # + str(abs_julian_day[1])
+                    name_log = name_log_folder + "/" + name_observatory + "_" + str(abs_julian_day[0]) + "_" +\
+                               str(abs_julian_day[1]) + str(abs_julian_day[2]) + '.txt'
                     log = open(str(name_log), 'a')
                     log.write(str(data_log) + " - " + str(self.text) + "\n")
                     log.close()

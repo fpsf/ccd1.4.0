@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from PyQt5 import QtWidgets
+from PyQt5.QtGui import QTextCursor
 
 
 class ConsoleLogWidget(QtWidgets.QWidget):
@@ -19,6 +20,7 @@ class ConsoleLogWidget(QtWidgets.QWidget):
         self.logOutput.setReadOnly(True)
         self.logOutput.setMinimumWidth(558)
         self.logOutput.setMaximumHeight(100)
+        # self.logOutput.resize(600, 200)
 
     def scrollDown(self):
         sb = self.logOutput.verticalScrollBar()
@@ -34,5 +36,6 @@ class ConsoleLogWidget(QtWidgets.QWidget):
         else:
             self.setStyleSheet("background-color: rgb(255, 5, 0); border-radius: 10px; color: black;")
 
+        self.logOutput.moveCursor(QTextCursor.End)
         self.logOutput.insertPlainText(datetime.utcnow().strftime('[%Y-%m-%d @ %H:%M:%S UTC]') + ' - ' + text + '\n')
         self.scrollDown()

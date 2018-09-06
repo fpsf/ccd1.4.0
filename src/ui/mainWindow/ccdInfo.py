@@ -15,16 +15,19 @@ class CCDInfo(QtWidgets.QWidget):
         self.config_widgets()
 
     def init_widgets(self):
-        self.title = QtWidgets.QLabel("CCD Information", self)
+        # self.title = QtWidgets.QLabel("CCD Information", self)
 
         """
         Function to initiate the Widgets of CCD Information
+        """
+
         """
         # Camera Firmware
         lf = QtWidgets.QLabel("Firmware:", self)
 
         # LineEdit to show Firmware version
         tfirm = QtWidgets.QLabel(self)
+        """
 
         # Camera Name
         ln = QtWidgets.QLabel("Camera:", self)
@@ -34,19 +37,22 @@ class CCDInfo(QtWidgets.QWidget):
         X_Pixels = QtWidgets.QLabel("", self)
         Y_Pixels = QtWidgets.QLabel(self)
 
-        self.cam.set_firmware_and_model_fields(lf, ln, X_Pixels, Y_Pixels)
+        self.cam.set_firmware_and_model_fields(ln, X_Pixels, Y_Pixels)
         # LineEdit to show camera model
         cn = QtWidgets.QLabel(self)
         cn.setAlignment(QtCore.Qt.AlignCenter)
 
+        # set_hbox(lf, tfirm),
         # Setting the layout
-        self.setLayout(set_lvbox(set_hbox(self.title),
-                                 set_hbox(lf, tfirm),
-                                 set_hbox(ln, cn),
+        """
+        self.title = QtWidgets.QLabel("CCD Information", self)
+        set_hbox(self.title),
+        """
+        self.setLayout(set_lvbox(set_hbox(ln, cn),
                                  set_hbox(X_Pixels, Y_Pixels, pixels_field)))
 
     def config_widgets(self):
-        self.title.setAlignment(QtCore.Qt.AlignCenter)
-        self.title.setFont(get_qfont(True))
+        # self.title.setAlignment(QtCore.Qt.AlignCenter)
+        # self.title.setFont(get_qfont(True))
 
         self.setStyleSheet("background-color: rgb(50, 50, 50); border-radius: 10px; color: white;")

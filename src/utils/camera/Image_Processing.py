@@ -142,13 +142,28 @@ def draw_image(img, file_name):
         times_nr_Font = ImageFont.truetype(os.path.join(fontsFolder, 'Arial.ttf'), 16)
 
     draw = ImageDraw.Draw(img)
+
+    '''
     draw.text((10, 10), observatory_img, fill='white', font=times_nr_Font)
-    draw.text((470, 10), filter_img, fill='white', font=times_nr_Font)
+    if filter_img[-4:] == "DARK":
+        draw.text((420, 10), filter_img, fill='white', font=times_nr_Font)
+    else:
+        draw.text((470, 10), filter_img, fill='white', font=times_nr_Font)
     draw.text((420, 490), hora_img, fill='white', font=times_nr_Font)
     draw.text((10, 490), data_img, fill='white', font=times_nr_Font)
-    del draw
+    '''
+    draw.text((10, 10), observatory_img, fill='white', font=times_nr_Font)
+    if filter_img[-4:] == "DARK":
+        draw.text((350, 10), filter_img, fill='white', font=times_nr_Font)
+    else:
+        draw.text((390, 10), filter_img, fill='white', font=times_nr_Font)
+    draw.text((325, 400), hora_img, fill='white', font=times_nr_Font)
+    draw.text((10, 400), data_img, fill='white', font=times_nr_Font)
+    # draw.text((300, 0), "Locating Text...", fill='white', font=times_nr_Font)
 
     return img
+    # New Size is 425 * 425
+    # Letters are 10 X Long; Lowest Y is 450
 
 
 def img_hist_equal(img, sref_min, sref_max):

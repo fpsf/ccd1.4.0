@@ -25,9 +25,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def init_window_geometry(self):
+        self.setFixedSize(self.a.layout().geometry().width(), self.a.layout().geometry().height())
         self.setGeometry(self.screensize[0]/2.5, self.screensize[1]/2.5, 0, 0)
         self.setWindowTitle("System Settings")
 
     def init_widget(self):
-        a = SystemSettingsWindow(self)
-        self.setCentralWidget(a)
+        self.a = SystemSettingsWindow(self)
+        self.setCentralWidget(self.a)

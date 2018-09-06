@@ -14,5 +14,5 @@ class CameraInfo(QtWidgets.QFrame):
         self.fan = FanStatus(self)
         self.temp = TempMonitor(self)
         # self.temp = None
-        self.setLayout(set_wvbox(self.ccd, self.fan, self.temp))
+        self.setLayout(set_wvbox(self.temp, self.fan, self.ccd))
         self.setStyleSheet("background-color: rgb(50, 50, 50); border-radius: 10px; color: white;")

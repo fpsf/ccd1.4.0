@@ -1,7 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
-from business.schedulers.schedStartEnd import SchedStartEnd
+from src.business.schedulers.schedStartEnd import SchedStartEnd
 from src.ui.commons.layout import set_hbox, set_lvbox
 from src.ui.commons.widgets import get_qfont
 from src.ui.mainWindow.StartEndTimeInfo import result

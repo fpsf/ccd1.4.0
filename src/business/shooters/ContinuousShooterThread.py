@@ -1,11 +1,9 @@
 import time
-import serial
 
 from PyQt5 import QtCore
 
 from src.business.consoleThreadOutput import ConsoleThreadOutput
 from src.business.shooters.SThread import SThread
-from src.utils.Leitura_portas import serial_ports
 
 
 class ContinuousShooterThread(QtCore.QThread):
@@ -53,8 +51,10 @@ class ContinuousShooterThread(QtCore.QThread):
             self.signalAfterShooting.emit()
 
     def start_continuous_shooter(self):
+        """
         if not self.one_photo:
             self.shutter_control(True)
+        """
         self.continuous = True
 
     def stop_continuous_shooter(self):
@@ -62,17 +62,19 @@ class ContinuousShooterThread(QtCore.QThread):
         self.continuous = False
         self.not_two_dark = False
         self.console.raise_text("Taking dark photo", 1)
+        """
         self.shutter_control(False)
+        """
         self.ss.take_dark()
         time.sleep(1)
         self.count = 1
 
-    # Consertar Shutter Para o onePhoto
     def stop_one_photo(self):
         self.one_photo = False
         self.wait_temperature = False
         self.continuous = False
         self.count = 1
+        self.exit()
 
     def thread_iniciada(self):
         if self.one_photo:
@@ -87,7 +89,8 @@ class ContinuousShooterThread(QtCore.QThread):
             self.console.raise_text("Taking photo N: {}".format(self.count), 1)
             self.count += 1
 
-    def shutter_control(self, cont):
+    '''
+        def shutter_control(self, cont):
         try:
             ser = serial.Serial(serial_ports()[len(serial_ports()) - 1], 9600,
                                 bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE,
@@ -104,4 +107,6 @@ class ContinuousShooterThread(QtCore.QThread):
                 # time.sleep(15)
         except Exception:
             self.console.raise_text("No Serial Equipment!", 3)
+
+    '''
 

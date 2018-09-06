@@ -21,7 +21,7 @@ class WidgetsGeography(QtWidgets.QWidget):
 
         self.lLon = QtWidgets.QLabel("Longitude (º):", self)
         self.lLon.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-
+        '''
         self.lElev = QtWidgets.QLabel("Elevation (m):", self)
         self.lElev.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 
@@ -30,6 +30,7 @@ class WidgetsGeography(QtWidgets.QWidget):
 
         self.lTemp = QtWidgets.QLabel("Temperature (ºC):", self)
         self.lTemp.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        '''
 
         # Creating Input Fields
         self.eLat = QtWidgets.QLineEdit(self)
@@ -38,6 +39,7 @@ class WidgetsGeography(QtWidgets.QWidget):
         self.eLon = QtWidgets.QLineEdit(self)
         self.eLon.setMaximumWidth(100)
 
+        '''
         self.eElev = QtWidgets.QLineEdit(self)
         self.eElev.setMaximumWidth(100)
 
@@ -46,35 +48,39 @@ class WidgetsGeography(QtWidgets.QWidget):
 
         self.eTemp = QtWidgets.QLineEdit(self)
         self.eTemp.setMaximumWidth(100)
+        '''
 
         # self.setting_up()
 
+    """
+    set_hbox(self.lElev, self.eElev),
+    set_hbox(self.lPres, self.ePres),
+    set_hbox(self.lTemp, self.eTemp)
+    """
     def setting_up(self):
         vbox = set_lvbox(set_hbox(self.lLat, self.eLat))
-        add_widget_to_vbox(vbox,
-                        set_hbox(self.lLon, self.eLon),
-                        set_hbox(self.lElev, self.eElev),
-                        set_hbox(self.lPres, self.ePres),
-                        set_hbox(self.lTemp, self.eTemp))
+        add_widget_to_vbox(vbox, set_hbox(self.lLon, self.eLon))
         # self.setLayout(vbox)
         return vbox
 
+    # self.eElev.text(), self.ePres.text(),
     def get_geography(self):
-        return self.eLat.text(), self.eLon.text(), self.eElev.text(), self.ePres.text(), self.eTemp.text()
+        return self.eLat.text(), self.eLon.text()  # self.eTemp.text()
 
-    def set_geography(self, latitude, longitude, elevation, pressure, temperature):
+    # elevation, pressure,
+    def set_geography(self, latitude, longitude, temperature):
         self.eLat.setText(latitude)
         self.eLon.setText(longitude)
-        self.eElev.setText(elevation)
-        self.ePres.setText(pressure)
-        self.eTemp.setText(temperature)
+        # self.eElev.setText(elevation)
+        # self.ePres.setText(pressure)
+        # self.eTemp.setText(temperature)
 
     def clear_geography(self):
         self.eLat.clear()
         self.eLon.clear()
-        self.eElev.clear()
-        self.ePres.clear()
-        self.eTemp.clear()
+        # self.eElev.clear()
+        # self.ePres.clear()
+        # self.eTemp.clear()
 
     def setting_up_geo(self):
         '''group_box = QGroupBox("&Image Contrast:")

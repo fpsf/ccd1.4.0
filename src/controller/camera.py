@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timedelta
 
 from src.business.configuration.settingsCamera import SettingsCamera
@@ -9,6 +10,8 @@ from src.controller.cameraQThread import CameraQThread
 from src.controller.commons.Locker import Locker
 from src.controller.fan import Fan
 from src.ui.mainWindow.status import Status
+from src.ui.mainWindow.StartEndTimeInfo import result
+from src.utils.camera import SbigDriver
 from src.utils.camera.SbigDriver import (ccdinfo, set_temperature, get_temperature,
                                          establishinglink, open_deviceusb, open_driver,
                                          close_device, close_driver, getlinkstatus)
@@ -54,6 +57,7 @@ class Camera(metaclass=Singleton):
 
         self.info_ini = []
         self.pass_list = [1024, 1024]
+        self.pass_list_str = ["1024", "1024"]
 
         info_ini = self.get_camera_settings_ini()
         self.aux_temperature = int(info_ini[0])
@@ -90,23 +94,28 @@ class Camera(metaclass=Singleton):
         info = self.get_info()
         return str(info[0]), str(info[2])[2:len(str(info[2]))-1], str(info[-2]), str(info[-1])
 
-    def set_firmware_and_model_fields(self, firmwareField, modelField, X_Pixels, Y_Pixels):
-        self.firmware_field = firmwareField
+    def get_model_and_pixels_new(self):
+        return self.model_field.text(), self.valor_pixels_x.text(), self.valor_pixels_y.text()
+
+    def set_firmware_and_model_fields(self, modelField, X_Pixels, Y_Pixels):
+        # self.firmware_field = firmwareField
         self.model_field = modelField
         self.valor_pixels_x = X_Pixels
         self.valor_pixels_y = Y_Pixels
 
     def set_firmware_and_model_values(self):
         firmware, model, y_pixels, x_pixels = self.get_firmware_and_model_and_pixels()
-        self.firmware_field.setText("Firmware: " + firmware)
+        # self.firmware_field.setText("Firmware: " + firmware)
         self.model_field.setText("Camera: " + model)
-        self.valor_pixels_x.setText(x_pixels + "      X ")
+        self.valor_pixels_x.setText(x_pixels + "       X ")
         self.valor_pixels_y.setText(y_pixels + " Pixels")
         self.pass_list = [int(self.valor_pixels_x.text().split(" ")[0]),
                           int(self.valor_pixels_y.text().split(" ")[0])]
+        self.pass_list_str = [self.valor_pixels_x.text().split(" ")[0],
+                              self.valor_pixels_y.text().split(" ")[0]]
 
     def clear_firmware_and_model_values(self):
-        self.firmware_field.setText("Firmware: ")
+        # self.firmware_field.setText("Firmware: ")
         self.model_field.setText("Camera: ")
 
     def get_info(self):
@@ -131,8 +140,14 @@ class Camera(metaclass=Singleton):
             c = establishinglink()
             if a is True and c is True:
                 self.console.raise_text("Open Device = {}".format(a), 2)
+                time.sleep(1)
+                # self.console.save_log("Open Device = {}".format(a))
                 self.console.raise_text("Established Link = {}".format(c), 2)
+                time.sleep(1)
+                # self.console.save_log("Established Link = {}".format(c))
                 self.console.raise_text("Successfully connected!", 2)
+                time.sleep(1)
+                # self.console.save_log("Successfully connected!")
                 self.set_firmware_and_model_values()
                 self.is_connected = True
 
@@ -179,6 +194,9 @@ class Camera(metaclass=Singleton):
             finally:
                 self.lock.set_release()
                 self.console.raise_text("Temperature set to {}°C".format(int(value)), 1)
+                time.sleep(1)
+                # self.check_fan()
+                # self.console.save_log("Temperature set to {}°C".format(int(value)))
         else:
             self.console.raise_text("The camera is not connected!", 3)
 
@@ -205,6 +223,7 @@ class Camera(metaclass=Singleton):
 
         return temp
 
+
     def check_link(self):
         return getlinkstatus()
 
@@ -217,13 +236,24 @@ class Camera(metaclass=Singleton):
     def standby_mode(self):
         self.set_temperature(15.00)
         self.fan.set_fan_off()
+        self.check_fan()
+
+    def check_fan(self):
+        if SbigDriver.is_fanning():
+            self.console.raise_text("Fan: ON", 2)
+            time.sleep(1)
+        else:
+            self.console.raise_text("Fan: OFF", 2)
+            time.sleep(1)
 
     def shooter_mode(self):
         info_ini = self.get_camera_settings_ini()
         self.aux_temperature = int(info_ini[0])
         self.set_temperature(int(self.aux_temperature))
         self.fan.set_fan_on()
+        self.check_fan()
         self.console.raise_text("Waiting temperature to " + str(self.aux_temperature) + "°C", 2)
+        time.sleep(1)
 
     # Shooters
     def start_one_photo(self):
@@ -250,8 +280,24 @@ class Camera(metaclass=Singleton):
     def stop_taking_photo(self):
         if getlinkstatus() is True:
             self.continuousShooterThread.stop_continuous_shooter()
+            # self.standby_mode()
         else:
             self.console.raise_text("The camera is not connected!", 3)
+
+    def log_ephem_infos(self):
+        info_start_end = result()
+        start_time = str(info_start_end[0])
+        start_field = start_time[:-10] + " UTC"
+        end_time = str(info_start_end[1])
+        end_field = end_time[:-10] + " UTC"
+        '''
+        time_obs_time = str(info_start_end[2]).split(":")
+        time_obs_time = [z.split(".")[0] for z in time_obs_time]
+        time_obs_field = time_obs_time[0] + ":" + time_obs_time[1] + " Hours"
+        '''
+        # self.console.raise_text("Start Time: " + start_field + "; End Time: " + end_field, 2)
+        self.console.save_log("Start Time: " + start_field + "; End Time: " + end_field)
+        time.sleep(1)
 
     def start_ephemeris_shooter(self):
         if getlinkstatus() is True:
@@ -262,23 +308,32 @@ class Camera(metaclass=Singleton):
     def stop_ephemeris_shooter(self):
         if getlinkstatus() is True:
             self.ephemerisShooterThread.stop_shooter()
+            # self.standby_mode()
         else:
             self.console.raise_text("The camera is not connected!", 3)
     # All PyQt Slots
 
     def eshooter_started(self):
         self.console.raise_text("Shooter Ephemeris Started!", 1)
+        time.sleep(1)
+        # self.console.save_log("Shooter Ephemeris Started!")
+        self.log_ephem_infos()
         self.standby_mode()
 
+
     def eshooter_finished(self):
-        self.console.raise_text('Shooter Finished\n', 1)
+        self.console.raise_text('Shooter Finished\n', 2)
+        time.sleep(1)
+        self.log_ephem_infos()
 
     def eshooter_observation_started(self):
         self.shooting = True
-        self.console.raise_text("Observation Started", 1)
+        self.console.raise_text("Observation Started\n", 2)
+        time.sleep(1)
+        self.log_ephem_infos()
 
     def eshooter_observation_finished(self):
-        self.console.raise_text("Observation Finalized", 1)
+        self.console.raise_text("Observation Finalized", 2)
         self.standby_mode()
         self.continuousShooterThread.wait_temperature = False
         self.continuousShooterThread.one_photo = False
@@ -286,6 +341,7 @@ class Camera(metaclass=Singleton):
         self.ephemerisShooterThread.continuousShooterThread.wait_temperature = False
         self.temp_contador_manual = 0
         self.shooting = False
+        self.log_ephem_infos()
 
     # Commands Slots
     def check_temp_manual(self):

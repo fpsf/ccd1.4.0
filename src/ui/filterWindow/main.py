@@ -29,4 +29,5 @@ class Main(QtWidgets.QMainWindow):
         self.init_window_geometry()
 
     def init_window_geometry(self):
+        self.setFixedSize(self.f.layout().geometry().width(), self.f.layout().geometry().height())
         self.setGeometry(self.screensize[0]/2.5, self.screensize[1]/2.5, 0, 0)

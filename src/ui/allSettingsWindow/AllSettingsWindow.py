@@ -1,4 +1,5 @@
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
 
 from PyQt5.QtWidgets import QPushButton
 
@@ -9,7 +10,7 @@ from src.ui.filterWindow.main import Main as filters
 from src.ui.imageSettingsWindow.main import Main as imag_menu
 from src.ui.projectSettingsWindow.main import MainWindow as mw
 from src.ui.systemSettingsWindow.main import MainWindow as sw
-
+from src.ui.shutterControls.main import Main as sc
 
 class AllSettingsWindow(QtWidgets.QWidget):
     def __init__(self):
@@ -24,6 +25,7 @@ class AllSettingsWindow(QtWidgets.QWidget):
         self.CCD_menu = CCD_menu(self)
         # Filter
         self.filters_menu = filters(self)
+        self.shutter_menu = sc(self)
         self.make_buttons()
         self.init_menu()
 
@@ -41,19 +43,29 @@ class AllSettingsWindow(QtWidgets.QWidget):
         # self.imageAction.clicked.connect(self.open_settings_image)
 
         self.imagerAction = QPushButton('Camera Settings', self)
-        self.imagerAction.clicked.connect(self.CCD_menu.show)
+        self.imagerAction.clicked.connect(self.funcao_teste)
         # self.imagerAction.clicked.connect(self.open_settings_CCD)
 
         self.filterAction = QPushButton('Filter Settings', self)
         self.filterAction.clicked.connect(self.filters_menu.show)
+
+        '''
+        self.shutterAction = QPushButton('Shutter Control', self)
+        self.shutterAction.clicked.connect(self.shutter_menu.show)
         # self.filterAction.clicked.connect(self.open_settings_filters)
+        '''
 
     def init_menu(self):
+        # set_hbox(self.shutterAction)
         self.setLayout(set_lvbox(set_hbox(self.swaction),
                                  set_hbox(self.mwaction),
                                  set_hbox(self.imageAction),
                                  set_hbox(self.imagerAction),
-                                 set_hbox(self.filterAction)))
+                                 set_hbox(self.filterAction),))
+
+    def funcao_teste(self):
+        self.CCD_menu.show()
+        self.CCD_menu.show_camera_infos()
 
     """def open_settings(self):
         settings = QtWidgets.QAction('Project Settings', self)

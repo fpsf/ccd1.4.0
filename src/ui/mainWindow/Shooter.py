@@ -1,4 +1,5 @@
 import os
+import time
 
 import skimage.io
 from PIL.ImageQt import ImageQt
@@ -8,13 +9,18 @@ from PyQt5 import QtWidgets
 from astropy.io.fits import getdata
 from scipy.misc import toimage
 
+from src.business.consoleThreadOutput import ConsoleThreadOutput
+from src.business.shooters.InfosForSThread import get_camera_settings
 from src.controller.camera import Camera
 from src.ui.commons.layout import set_hbox, set_lvbox
-from src.utils.camera import Image_Processing
+from src.utils.camera import Image_Processing, SbigDriver
 from src.business.configuration.settingsCamera import SettingsCamera
 
 
 # Aux Functions
+from src.utils.camera.Image_Headers import make_elevations_info
+
+
 def set_width(*s):
     for o in s:
         o.setMaximumWidth(25)
@@ -28,6 +34,7 @@ class Shooter(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super(Shooter, self).__init__(parent)
+        self.console = ConsoleThreadOutput()
         self.cam = Camera()
         self.cond = 0
         self.sref_calc = SettingsCamera()
@@ -41,6 +48,19 @@ class Shooter(QtWidgets.QWidget):
 
         self.set_layout()
         self.link_signals()
+
+    def log_ephem_infos(self):
+        elevations = make_elevations_info()
+        headers_camera = get_camera_settings()
+        temp = SbigDriver.get_temperature()[3]
+        set_temp = headers_camera[0]
+        ephem_infos_1 = "Sun Elevation: " + str(elevations[2]) + "; Moon Elevation: " + str(elevations[1]) +\
+                        "; Moon Phase: " + str(elevations[0])
+        self.console.save_log(ephem_infos_1)
+        time.sleep(1)
+        ephem_infos_2 = "Camera Temperature: " + "{0:.2f}".format(temp) + "; Set Temperature: " +\
+                        set_temp + "; Status Temp. Filtro: 25ºC"
+        self.console.save_log(ephem_infos_2)
 
     def link_signals(self):
         self.cam.ephemerisShooterThread.continuousShooterThread.ss.finished.connect(self.get_image_automatic)
@@ -62,6 +82,7 @@ class Shooter(QtWidgets.QWidget):
 
     def config_img_label(self):
         self.img.setPixmap(QtGui.QPixmap("noimage.png"))
+        self.img.setMaximumSize(425, 425)
         self.prefix = QtWidgets.QLabel(self)
         self.date = QtWidgets.QLabel(self)
         self.hour = QtWidgets.QLabel(self)
@@ -111,7 +132,7 @@ class Shooter(QtWidgets.QWidget):
 
             img_hist_equal = Image_Processing.img_hist_equal(image, sref_min, sref_max)
             im3 = toimage(img_hist_equal)
-            im4 = im3.resize((int(512), int(512)))
+            im4 = im3.resize((int(425), int(425)))
             im5 = Image_Processing.draw_image(im4, path)
 
             try:
@@ -121,7 +142,7 @@ class Shooter(QtWidgets.QWidget):
                 print("Exception setPixmap(QtGui.QPixmap(image_to_show)) -> {}".format(e))
 
             print(path)
-
+            self.log_ephem_infos()
         except Exception as e:
             print("Exception Setting Pixmap -> {}".format(e))
 

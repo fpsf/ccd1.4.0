@@ -23,7 +23,7 @@ def set_headers(for_headers_dic):
     for_headers_dic['Start Time'] = Image_Path.set_path()[1]
     for_headers_dic['Binning'] = headers_camera[3]
     for_headers_dic['Set Temperature'] = headers_camera[0]
-    for_headers_dic['Temperature'] = SbigDriver.get_temperature()[2]
+    for_headers_dic['Temperature'] = SbigDriver.get_temperature()[3]
     for_headers_dic['Imager ID'] = headers_project[2][2]
     for_headers_dic['Exposure'] = headers_camera[2]
     for_headers_dic['Filter Label'] = headers_camera[1]

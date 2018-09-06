@@ -1,4 +1,4 @@
 [General]
 GNU_linux_startup=true
-images_path=C:/Users/user/PycharmProjects/ccd1.2.0/src/imgs
-log_path=C:/Users/user/PycharmProjects/ccd1.2.0/src
+images_path=C:/Users/user/Documents/Imagens
+log_path=C:/Users/user/Documents/Imagens/Log

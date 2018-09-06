@@ -1,3 +1,5 @@
+import time
+
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QIntValidator
@@ -18,6 +20,7 @@ class SettingsCCDInfos(QWidget):
         super(SettingsCCDInfos, self).__init__(parent)
 
         # Instance attributes create_ccd_info_group
+        self.p = parent
         self.info_port_ccd_l = None
         self.info_port_ccd_f = None
         self.info_camera_model_l = None
@@ -67,18 +70,22 @@ class SettingsCCDInfos(QWidget):
         grid.addWidget(self.create_ccd_camera_group())
         grid.addWidget(self.create_push_button_group())
         self.setLayout(grid)
+        self.w = grid.geometry().width()
+        self.h = grid.geometry().height()
 
         self.setWindowTitle("Imager Box")
-        self.resize(500, 340)
-        self.info_cam()
+        # self.resize(500, 340)
+        # self.info_cam()
 
     def create_ccd_info_group(self):
         group_box = QGroupBox("Info CCD")
 
+        '''
         self.info_port_ccd_l = QtWidgets.QLabel("Camera Firmware: ", self)
         self.info_port_ccd_l.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.info_port_ccd_f = QtWidgets.QLabel(self.firmware)
         self.info_port_ccd_f.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        '''
 
         self.info_camera_model_l = QtWidgets.QLabel("Camera Model: ", self)
         self.info_camera_model_l.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -90,8 +97,7 @@ class SettingsCCDInfos(QWidget):
         self.info_pixel_array_f = QtWidgets.QLabel(self.x_pixels + " X " + self.y_pixels + " Pixels")
         self.info_pixel_array_f.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
 
-        group_box.setLayout(set_lvbox(set_hbox(self.info_port_ccd_l, self.info_port_ccd_f),
-                                      set_hbox(self.info_camera_model_l, self.info_camera_model_f),
+        group_box.setLayout(set_lvbox(set_hbox(self.info_camera_model_l, self.info_camera_model_f),
                                       set_hbox(self.info_pixel_array_l, self.info_pixel_array_f)))
         return group_box
 
@@ -182,6 +188,11 @@ class SettingsCCDInfos(QWidget):
 
         except Exception as e:
             print(e)
+        finally:
+            self.p.close()
+            self.clear_all()
+            self.setting_values()
+            # self.refresh_all_fields()
 
     def clear_all(self):
         self.temp_set_point_f.clear()
@@ -193,7 +204,8 @@ class SettingsCCDInfos(QWidget):
     def take_one_photo(self):
         try:
             if str(self.close_open) == "Closed":
-                self.console.raise_text("take_one_photo started: dark photo", 1)
+                # self.console.raise_text("take_one_photo started: dark photo", 1)
+                # time.sleep(1)
                 self.cam.one_photo = True
                 print("bbbbbbbbbbbbbbbbbbbbb")
                 print(self.cam.one_photo)
@@ -201,7 +213,8 @@ class SettingsCCDInfos(QWidget):
                 # self.one_photo.args_one_photo(self.select_filter_manual, self.select_filter_shutter)
                 # self.one_photo.start()
             else:
-                self.console.raise_text("take_one_photo started: photo", 1)
+                # self.console.raise_text("take_one_photo started: photo", 1)
+                # time.sleep(1)
                 self.cam.one_photo = True
                 print("aaaaaaaaaaaaa")
                 print(self.cam.one_photo)
@@ -238,19 +251,21 @@ class SettingsCCDInfos(QWidget):
             print("Exception -> {}".format(e))
 
     def info_cam(self):
+        # self.firmware,
         try:
-            if getlinkstatus() is True:
-                self.firmware, self.model, self.y_pixels, self.x_pixels = \
-                    self.cam.get_firmware_and_model_and_pixels()
+            if self.cam.is_connected:
+                self.model = self.cam.get_firmware_and_model_and_pixels()[1]
+                self.x_pixels, self.y_pixels = self.cam.pass_list_str
+                # self.model, self.x_pixels, self.y_pixels = self.cam.get_model_and_pixels_new()
+                placeholder = None
             else:
-                self.firmware, self.model, self.y_pixels, self.x_pixels = "????", "????", \
-                                                                          "????", "????"
+                self.model, self.x_pixels, self.y_pixels = "????", "????", "????"
 
-            self.info_port_ccd_f.setText(self.firmware)
+            # self.info_port_ccd_f.setText(self.firmware)
             self.info_camera_model_f.setText(self.model)
             self.info_pixel_array_f.setText(str(self.y_pixels) + " x " + str(self.x_pixels))
+            placeholder = None
 
         except Exception as e:
             print("CCDInfos get_firmware_and_model_and_pixels -> {}".format(e))
-            self.firmware, self.model, self.y_pixels, self.x_pixels = "????", "????", \
-                                                                      "????", "????"
+            self.model, self.x_pixels, self.y_pixels = "????", "????", "????"
