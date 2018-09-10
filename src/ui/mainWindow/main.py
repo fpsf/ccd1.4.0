@@ -116,7 +116,7 @@ class Main(QtWidgets.QMainWindow):
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())'''
-        self.setWindowTitle("CCD Controller 1.2.0")
+        self.setWindowTitle("CCD Controller 1.4.0")
         self.setFixedSize(self.width(), self.height())
         self.show()
         # self.resize(0, 700)

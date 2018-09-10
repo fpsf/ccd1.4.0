@@ -123,7 +123,7 @@ class SettingsCCDInfos(QWidget):
         self.temp_init_f.setMaximumWidth(100)
         self.temp_init_f.setValidator(QIntValidator(0, 600))
 
-        self.time_between_photos_l = QtWidgets.QLabel("Time Between Images(s):", self)
+        self.time_between_photos_l = QtWidgets.QLabel("Time Between Dark Images(s):", self)
         self.time_between_photos_l.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.time_between_photos_f = QtWidgets.QLineEdit(self)
         self.time_between_photos_f.setMaximumWidth(100)

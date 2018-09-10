@@ -3,6 +3,7 @@ import time
 from PyQt5 import QtCore
 
 from src.business.consoleThreadOutput import ConsoleThreadOutput
+from src.business.shooters.DarkShooterThread import DarkShooterThread
 from src.business.shooters.SThread import SThread
 
 
@@ -18,7 +19,7 @@ class ContinuousShooterThread(QtCore.QThread):
         super(ContinuousShooterThread, self).__init__()
         self.continuous = True
         self.s = timeSleep
-
+        self.ds = DarkShooterThread(self.s)
         '''
         SThread manda para o Sbigdriver as informações para se tirar a foto em si.
         '''
@@ -42,12 +43,13 @@ class ContinuousShooterThread(QtCore.QThread):
                 self.signal_temp.emit()
                 if self.wait_temperature:
                     self.ss.start()
+                    self.ds.start()
                     while self.ss.isRunning():
                         time.sleep(1)
             except Exception as e:
                 print(e)
 
-            time.sleep(self.s)
+            # time.sleep(self.s)
             self.signalAfterShooting.emit()
 
     def start_continuous_shooter(self):
@@ -56,8 +58,10 @@ class ContinuousShooterThread(QtCore.QThread):
             self.shutter_control(True)
         """
         self.continuous = True
+        self.ds.continuous = True
 
     def stop_continuous_shooter(self):
+        self.ds.continuous = False
         self.wait_temperature = False
         self.continuous = False
         self.not_two_dark = False
