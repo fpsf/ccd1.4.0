@@ -13,6 +13,6 @@ image_tif=true
 prefixo=OH
 temperature_camera=-20
 tempo_exposicao=30
-tempo_fotos=60
+tempo_fotos=600
 time_cooling=600
 wavelength_filter=NIR Infrared

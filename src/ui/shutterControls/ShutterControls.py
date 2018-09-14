@@ -1,16 +1,18 @@
 import time
 
-import serial
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QPushButton
 
 from src.ui.commons.layout import set_hbox
-from src.utils.Leitura_portas import serial_ports
+from src.utils.Shutter_Tests import shutter_control
+from src.business.consoleThreadOutput import ConsoleThreadOutput
 
 
 class ShutterControls(QtWidgets.QWidget):
     def __init__(self):
         super(ShutterControls, self).__init__()
+
+        self.console = ConsoleThreadOutput()
 
         self.openaction = QPushButton('Open Shutter', self)
         self.openaction.clicked.connect(self.run_true)
@@ -21,32 +23,15 @@ class ShutterControls(QtWidgets.QWidget):
         self.setLayout(set_hbox(self.openaction, self.closeaction))
 
     def run_true(self):
-        self.shutter_control(True)
+        self.console.raise_text("Opening Shutter...", 2)
+        time.sleep(1)
+        if shutter_control(True) == "An Error Occured...":
+            self.console.raise_text("An Error Occured...", 3)
+            time.sleep(1)
 
     def run_false(self):
-        self.shutter_control(False)
-
-    def shutter_control(self, cont):
-        if len(serial_ports()) < 1:
-            self.console.raise_text("No Serial Equipment!", 3)
+        self.console.raise_text("Closing Shutter...", 2)
+        time.sleep(1)
+        if shutter_control(False) == "An Error Occured...":
+            self.console.raise_text("An Error Occured...", 3)
             time.sleep(1)
-        else:
-            ser = serial.Serial(serial_ports()[len(serial_ports()) - 1], 9600,
-                                bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE,
-                                stopbits=serial.STOPBITS_ONE)
-            if cont is True:
-                self.console.raise_text("Opening Shutter", 1)
-                time.sleep(1)
-                send = bytes([235, 144, 86, 1, 46])
-                ser.write(send)
-                # time.sleep(15)
-            else:
-                self.console.raise_text("Closing Shutter", 1)
-                time.sleep(1)
-                send = bytes([235, 144, 214, 1, 174])
-                ser.write(send)
-                # time.sleep(15)
-            '''
-            except Exception:
-                self.console.raise_text("No Serial Equipment!", 3)
-            '''

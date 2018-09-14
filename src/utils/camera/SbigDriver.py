@@ -428,14 +428,6 @@ def photoshoot(etime, pre, binning, dark_photo,
     print("Height = " + str(v_h))
     print("Width = " + str(v_w))
 
-    '''
-    Microcontroller Serial Commands:
-    Open Shutter; CHARS 235, 144, 86, 1, 46; SENDS: "ëV."
-    Close Shutter; CHARS: 235, 144, 214, 1, 174 SENDS: "ëÖ®"
-    Get Temperature; CHARS: 235, 144, 2, 1, 130 SENDS: "ë‚"
-    In Python, Must be Written as: ser.write(bytes([nums, you, want, to, send]))
-    '''
-
     print("GRAB IMAGE - Start Exposure")
 
     cin = SbigStructures.StartExposureParams2

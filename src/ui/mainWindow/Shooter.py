@@ -13,6 +13,7 @@ from src.business.consoleThreadOutput import ConsoleThreadOutput
 from src.business.shooters.InfosForSThread import get_camera_settings
 from src.controller.camera import Camera
 from src.ui.commons.layout import set_hbox, set_lvbox
+from src.utils.Shutter_Tests import shutter_control
 from src.utils.camera import Image_Processing, SbigDriver
 from src.business.configuration.settingsCamera import SettingsCamera
 
@@ -54,12 +55,13 @@ class Shooter(QtWidgets.QWidget):
         headers_camera = get_camera_settings()
         temp = SbigDriver.get_temperature()[3]
         set_temp = headers_camera[0]
+        temp_filtro = shutter_control(None)[0]
         ephem_infos_1 = "Sun Elevation: " + str(elevations[2]) + "; Moon Elevation: " + str(elevations[1]) +\
                         "; Moon Phase: " + str(elevations[0])
         self.console.save_log(ephem_infos_1)
-        time.sleep(1)
+        time.sleep(2)
         ephem_infos_2 = "Camera Temperature: " + "{0:.2f}".format(temp) + "; Set Temperature: " +\
-                        set_temp + "; Status Temp. Filtro: 25ºC"
+                        set_temp + "; Status Temp. Filtro: " + "{0:.2f}".format(temp_filtro) + "ºC"
         self.console.save_log(ephem_infos_2)
 
     def link_signals(self):

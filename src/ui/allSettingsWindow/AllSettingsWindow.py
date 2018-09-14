@@ -49,11 +49,11 @@ class AllSettingsWindow(QtWidgets.QWidget):
         self.filterAction = QPushButton('Filter Settings', self)
         self.filterAction.clicked.connect(self.filters_menu.show)
 
-        '''
+
         self.shutterAction = QPushButton('Shutter Control', self)
         self.shutterAction.clicked.connect(self.shutter_menu.show)
         # self.filterAction.clicked.connect(self.open_settings_filters)
-        '''
+
 
     def init_menu(self):
         # set_hbox(self.shutterAction)
@@ -61,7 +61,8 @@ class AllSettingsWindow(QtWidgets.QWidget):
                                  set_hbox(self.mwaction),
                                  set_hbox(self.imageAction),
                                  set_hbox(self.imagerAction),
-                                 set_hbox(self.filterAction),))
+                                 set_hbox(self.filterAction),
+                                 set_hbox(self.shutterAction)))
 
     def funcao_teste(self):
         self.CCD_menu.show()

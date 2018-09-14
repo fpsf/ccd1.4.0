@@ -12,6 +12,7 @@ from src.controller.camera import Camera
 from src.controller.commons.Locker import Locker
 from src.controller.fan import Fan
 from src.ui.commons.layout import set_hbox, set_lvbox
+from src.utils.Shutter_Tests import shutter_control
 from src.utils.camera.SbigDriver import getlinkstatus
 
 
@@ -108,7 +109,7 @@ class SettingsCCDInfos(QWidget):
 
         self.shutter_l = QtWidgets.QLabel("Shutter:", self)
         self.shutter_l.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        self.close_open = QtWidgets.QLabel("Closed")
+        self.close_open = QtWidgets.QLabel()
         self.close_open.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 
         self.temp_set_point_l = QtWidgets.QLabel("CCD Temp Set Point (°C):", self)
@@ -176,6 +177,14 @@ class SettingsCCDInfos(QWidget):
         self.temp_set_point_f.setText(temperature_camera)
         self.temp_init_f.setText(temp_init_f)
         self.time_between_photos_f.setText(tbf)
+
+        srch = shutter_control(None)
+        if srch[1] == 1:
+            self.close_open.setText("Open")
+        elif srch[1] == 2:
+            self.close_open.setText("Closed")
+        else:
+            self.close_open.setText("????")
 
     def button_ok_func(self):
         try:
